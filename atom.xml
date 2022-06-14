@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://311zzb.github.io</id>
+    <title>311zzb</title>
+    <updated>2022-06-14T13:02:23.554Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://311zzb.github.io"/>
+    <link rel="self" href="https://311zzb.github.io/atom.xml"/>
+    <logo>https://311zzb.github.io/images/avatar.png</logo>
+    <icon>https://311zzb.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2022, 311zzb</rights>
+    <entry>
+        <title type="html"><![CDATA[Gitlet Design Document]]></title>
+        <id>https://311zzb.github.io/post/gitlet-design-document/</id>
+        <link href="https://311zzb.github.io/post/gitlet-design-document/">
+        </link>
+        <updated>2022-03-02T06:25:03.000Z</updated>
+        <summary type="html"><![CDATA[<p>This is the design document of my implementation of Gitlet, a version-control system that mimics some of the basic features of the popular system Git. It passed all tests on the gradescope autograder provided by University of California Berkeley, CS 61B. Source code is available upon request.</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>This is the design document of my implementation of Gitlet, a version-control system that mimics some of the basic features of the popular system Git. It passed all tests on the gradescope autograder provided by University of California Berkeley, CS 61B. Source code is available upon request.</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Subtype polymorphism in Java: Overriding vs. Overloading]]></title>
+        <id>https://311zzb.github.io/post/subtype-polymorphism/</id>
+        <link href="https://311zzb.github.io/post/subtype-polymorphism/">
+        </link>
+        <updated>2022-01-24T03:10:10.000Z</updated>
+        <summary type="html"><![CDATA[<p>Subtype polymorphism (providing a single interface to entities of different types) and dynamic type selection (DMS) might be one of the most obscure part for Java beginners like me. Here I am trying to write an article on this topic gathering my solutions and approaches to problems in such topic.</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Subtype polymorphism (providing a single interface to entities of different types) and dynamic type selection (DMS) might be one of the most obscure part for Java beginners like me. Here I am trying to write an article on this topic gathering my solutions and approaches to problems in such topic.</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Personal Finance]]></title>
+        <id>https://311zzb.github.io/post/personal-finance/</id>
+        <link href="https://311zzb.github.io/post/personal-finance/">
+        </link>
+        <updated>2022-01-13T02:16:47.000Z</updated>
+        <summary type="html"><![CDATA[<h1 id="概述">概述</h1>
+<p>在这篇文章中我阐述了自己的财务管理（包括记账和财务分析）系统。我不是会计专业的，也没什么经济知识，只是被想要财富自由的欲望驱动着随便搞着试试的。不过我感觉确实得在这方面多学习，尤其是写不出来和看不懂别人文章的时候。</p>
+]]></summary>
+        <content type="html"><![CDATA[<h1 id="概述">概述</h1>
+<p>在这篇文章中我阐述了自己的财务管理（包括记账和财务分析）系统。我不是会计专业的，也没什么经济知识，只是被想要财富自由的欲望驱动着随便搞着试试的。不过我感觉确实得在这方面多学习，尤其是写不出来和看不懂别人文章的时候。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[最好的CS入门课：CS61a学后感]]></title>
+        <id>https://311zzb.github.io/post/zui-hao-de-cs-ru-men-ke-cs61a-xue-hou-gan/</id>
+        <link href="https://311zzb.github.io/post/zui-hao-de-cs-ru-men-ke-cs61a-xue-hou-gan/">
+        </link>
+        <updated>2022-01-11T06:22:30.000Z</updated>
+        <summary type="html"><![CDATA[<p>之前看到别人的CS61a学后感时，只觉得学个网课都要写篇文章是不是有点表演型人格了，但我学了几节之后就觉得CS61a简直是文明的福音转码的圣经，为什么没有早点知道有这门课存在？并且陷入了对伯克利的学生的羡慕中（他们大一就学CS61a）。现在我学完了CS61a的（几乎）所有内容，特此写一篇文章记录一下，顺便安利给有缘人。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>之前看到别人的CS61a学后感时，只觉得学个网课都要写篇文章是不是有点表演型人格了，但我学了几节之后就觉得CS61a简直是文明的福音转码的圣经，为什么没有早点知道有这门课存在？并且陷入了对伯克利的学生的羡慕中（他们大一就学CS61a）。现在我学完了CS61a的（几乎）所有内容，特此写一篇文章记录一下，顺便安利给有缘人。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[双非转码6个月考取名古屋大学情报学知能システム+東京大学新領域人間環境经验分享]]></title>
+        <id>https://311zzb.github.io/post/shuang-fei-zhuan-ma-6-ge-yue-kao-qu-ming-gu-wu-da-xue-qing-bao-xue-zhi-neng-sisutemudong-jing-da-xue-xin-ling-yu-ren-jian-huan-jing-jing-yan-fen-xiang/</id>
+        <link href="https://311zzb.github.io/post/shuang-fei-zhuan-ma-6-ge-yue-kao-qu-ming-gu-wu-da-xue-qing-bao-xue-zhi-neng-sisutemudong-jing-da-xue-xin-ling-yu-ren-jian-huan-jing-jing-yan-fen-xiang/">
+        </link>
+        <updated>2021-08-29T06:08:22.000Z</updated>
+        <summary type="html"><![CDATA[<p><em>本文共7122字，预计阅读耗时14-24分钟</em></p>
+]]></summary>
+        <content type="html"><![CDATA[<p><em>本文共7122字，预计阅读耗时14-24分钟</em></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[日语学习工具推荐]]></title>
+        <id>https://311zzb.github.io/post/ri-yu-xue-xi-gong-ju-tui-jian/</id>
+        <link href="https://311zzb.github.io/post/ri-yu-xue-xi-gong-ju-tui-jian/">
+        </link>
+        <updated>2021-08-29T02:58:18.000Z</updated>
+        <summary type="html"><![CDATA[<blockquote>
+<p>人们总会高估自己几天能做的事情，却往往低估自己几年能做的事情。</p>
+</blockquote>
+<p>从18年9月2日下定决心学日语然后买了个网课到2020年12月通过JLPT N1，大部分时间我都感觉学习日语是一件相当快乐简单又有收获的事情。<br>
+以下记录一些我目前认为对自学日语相当有用的网站，<strong>中高級者向けです</strong>。</p>
+]]></summary>
+        <content type="html"><![CDATA[<blockquote>
+<p>人们总会高估自己几天能做的事情，却往往低估自己几年能做的事情。</p>
+</blockquote>
+<p>从18年9月2日下定决心学日语然后买了个网课到2020年12月通过JLPT N1，大部分时间我都感觉学习日语是一件相当快乐简单又有收获的事情。<br>
+以下记录一些我目前认为对自学日语相当有用的网站，<strong>中高級者向けです</strong>。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[本科毕设 Undergraduate Final Project]]></title>
+        <id>https://311zzb.github.io/post/ben-ke-bi-she-undergraduate-final-project/</id>
+        <link href="https://311zzb.github.io/post/ben-ke-bi-she-undergraduate-final-project/">
+        </link>
+        <updated>2021-05-26T03:37:53.000Z</updated>
+        <summary type="html"><![CDATA[<p>总之把毕设的poster和论文都放在这里了。<br>
+说起来惭愧，我曾经也是学设计的。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>总之把毕设的poster和论文都放在这里了。<br>
+说起来惭愧，我曾经也是学设计的。</p>
+]]></content>
+    </entry>
+</feed>

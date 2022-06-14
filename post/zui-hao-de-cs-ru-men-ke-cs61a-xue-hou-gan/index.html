@@ -1,0 +1,300 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+<meta name="description" content=""/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>最好的CS入门课：CS61a学后感 | 311zzb</title>
+
+<link rel="shortcut icon" href="https://311zzb.github.io/favicon.ico?v=1655211738195">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://311zzb.github.io/styles/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script>
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-216170282-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+        gtag('config', 'UA-216170282-2');
+    </script>
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            311zzb
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+                <div class="nav-item">
+                    
+                        <a href="/" class="menu gt-a-link">
+                            首页
+                        </a>
+                    
+                </div>
+            
+                <div class="nav-item">
+                    
+                        <a href="/archives" class="menu gt-a-link">
+                            归档
+                        </a>
+                    
+                </div>
+            
+                <div class="nav-item">
+                    
+                        <a href="/tags" class="menu gt-a-link">
+                            标签
+                        </a>
+                    
+                </div>
+            
+                <div class="nav-item">
+                    
+                        <a href="/post/about" class="menu gt-a-link">
+                            关于
+                        </a>
+                    
+                </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1655211738195" action="/search/index.html">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    最好的CS入门课：CS61a学后感
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2022-01-11 ·
+                    </time>
+                    
+                        <a href="https://311zzb.github.io/tag/6je7mQUZZ/" class="post-tags">
+                            # Learning
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>之前看到别人的CS61a学后感时，只觉得学个网课都要写篇文章是不是有点表演型人格了，但我学了几节之后就觉得CS61a简直是文明的福音转码的圣经，为什么没有早点知道有这门课存在？并且陷入了对伯克利的学生的羡慕中（他们大一就学CS61a）。现在我学完了CS61a的（几乎）所有内容，特此写一篇文章记录一下，顺便安利给有缘人。</p>
+<!-- more -->
+<h1 id="为什么学cs61a">为什么学CS61a</h1>
+<p>本来我是看了一亩三分地上的转码帖子，学了斯坦佛的Databases课之后打算学CS61b的，但发现CS61a是CS61b的prerequisite。为了满足心理洁癖（也因为我时间比较充裕），我决定从CS61a学起。<br>
+由于当时最新的fa21还没更新完，次新的su21的最后一些录屏看不了，次次新的sp21没一个录屏看得到，于是我就学了fa20。非常感谢UCB把<a href="https://inst.eecs.berkeley.edu/~cs61a/fa20/">CS61a fa20</a>材料中能公开的都公开了。</p>
+<h1 id="cs61a教了什么">CS61a教了什么</h1>
+<p>这门课是<a href="http://mitpress.mit.edu/sicp/">SICP</a>的变种，使用Python 3来展示抽象方法、编程范式和管理大型程序的技术。由于2012年之后的新版CS61a使用Python教学，所以较旧版（使用Scheme教学）更容易入门，也更贴近实际。分章节来说，CS61a主要教了以下这些内容：</p>
+<ol>
+<li>用函数构建抽象关系
+<ol>
+<li>函数与函数设计</li>
+<li>控制</li>
+<li>高级函数</li>
+<li>递归函数</li>
+</ol>
+</li>
+<li>用数据构建抽象关系
+<ol>
+<li>数据抽象</li>
+<li>可变数据</li>
+<li>面向对象编程</li>
+</ol>
+</li>
+<li>解释(interpreting)计算机程序
+<ol>
+<li>函数式编程</li>
+<li>异常</li>
+<li>解释器的开发</li>
+</ol>
+</li>
+<li>数据处理
+<ol>
+<li>声明式编程</li>
+</ol>
+</li>
+</ol>
+<h1 id="我学到了什么">我学到了什么</h1>
+<p>其实在学CS61a之前我也学过算法与数据结构，做过C语言的算法题、用python和java刷过一点leetcode。但一直苦于没有系统性地入门CS，知识点较为零散，没有构建&quot;Computational Thinking&quot;。通过学习CS61a，我感觉多少缓解了这种焦虑。在课程的主要知识点内外，我印象最深刻的内容是这些：</p>
+<ol>
+<li>代码如何被解释器执行<br>
+调用一个函数时operator和operands的计算顺序、程序执行的frame和environment、可变与不可变数据、多重赋值、nonlocal赋值、异常处理等</li>
+<li>Recursive Leap of Faith (递归的信仰之跃)<br>
+递归与数学归纳法很像。编写递归程序时，一个base case规定边界条件、一个recursive case规定递归操作。在recursive case中，我们信任这个函数会给出正确的n返回值，再利用返回值去构建n+1的返回值。这种信任被称为&quot;Recursive Leap of Faith&quot;。同样当我们理解、修改递归程序时，不应该试图推演递归调用，而是直接信任它，并在其基础上修改从n到n+1的操作，leave the hard work to the computer。 当然，一定要推演的话可以推演一个递归深度浅的例子。</li>
+<li>什么是abstraction (抽象)<br>
+赋值、函数、对象等等都是抽象，没有抽象的语言是低级语言。通过抽象，我们可以把问题变为计算、变为对象。这也是面对对象编程的一大优势：问题的场景会自动解决一部分问题，it is what it is.</li>
+<li>为什么说LISP是神的编程语言<br>
+CS61a教了LISP的一门方言：Scheme。这是一门函数式编程语言（所有函数都没有副作用，纯粹依靠返回值），只有call expression和special form两种语句。但它神奇在于几乎无限的可拓展性：定义函数就不说了；Scheme还可以通过定义宏来定义special form（原理是宏的参数不会在调用之前被evaluate，进而可以控制evaluation的步骤）；而且，Scheme中的数据与程序都是链表，这让编写编写程序的程序变得非常简单，事实上，计算机推导公式与符号计算正是如今lisp的主要应用之一。</li>
+<li>解决问题的一般思路 (来自<a href="http://htdp.org/">How To Design Programs</a>)
+<ol>
+<li>从分析问题到定义数据<br>
+阅读问题，寻找必须要被抽象化（表示）的信息，并思考用何种数据结构表示。寻找实际例子。</li>
+<li>函数签名、目的描述、以及docstring<br>
+思考解决问题的函数的输入与输出，准确描述这个函数在计算什么并撰写docstring。</li>
+<li>例子推演<br>
+通过例子推演计算的步骤，编写核心的步骤，设计函数的骨架。</li>
+<li>函数定义<br>
+编写剩下的函数使其能够支撑核心步骤，通过例子意识变量与表达式的实际意义。</li>
+<li>测试<br>
+使用例子推演函数、并使用doctest测试、修改错误、把程序修改得更为易读。</li>
+</ol>
+</li>
+</ol>
+<h1 id="cs61a好在哪里">CS61a好在哪里</h1>
+<p>能学到知识当然好，但它是否值得我花时间去学呢？我想不少人可能有这样的疑惑。我的回答是YES，这门课在很大程度上增加了我对编写程序的热情，如果没有lab、homework、discussion、project以及其他课程工具的精巧设计，这是不可能的：（几乎）所有题目都有完善的说明、例子、半自动的测试和批改，python tutor可以帮你把python程序的frame可视化，在线interpreter让你可以随时随地互动测试。</p>
+<p>最重要的是，CS61a的四个项目里面有三个都是做游戏，这真的很让人兴奋。我还记得我才学完控制和高等函数的时候，就遇到了第一个项目。没想到光是用这么基础的知识就可以编写一个掷骰子游戏hog的核心逻辑、策略。其他几个游戏在这里就不剧透了，它们都很有意思。另外，CS61a中有好几处谐音梗和对pop culture的致敬，其实这些才是我记得最牢的哈哈哈。除此之外，还有一些节目效果拉满的lecture，比如John表演手搓某游戏音乐、讲解对象的多重继承时的抽象一家人伦理小剧场...总之真的很欢乐。</p>
+<h1 id="数据">数据</h1>
+<p>CS61a总共4个project，10个homework，14个discussion，14个lab，38个lecture，261个视频。<br>
+我从10月31日到1月11日，总共用了72天学完（几乎）所有可以得到的材料（刚开始的一个月只学了65小时）。学了最长时间的那天是2021年12月31号...在CS61a上用了6小时四十五分钟。有记录的学习时间共计229.08小时，<a href="https://docs.google.com/spreadsheets/d/1pqwzZ2ovemU8WJMEgbcobHuMpYiAExNweQzcbYsaQR4/edit?usp=sharing">详细数据(Google Spreadsheet)</a>供考虑学CS61a的同学参考。</p>
+<h1 id="最后">最后</h1>
+<p>千言万语难以表达我对这门课的喜爱和对UCB, Dr. John Denero, Dr. Hany Faird的感谢。就以他们的人生建议结束吧。</p>
+<blockquote>
+<p>When I was getting married, I was a PhD student at the time. My mom pulled me aside on my wedding day and said &quot;John I want to give you some advice&quot;. I was like oh she's going to like tell me to listen to my wife or whatever. But she didn't. She said only two words that have stuck with me for a long time. She said &quot;don't compare&quot;. That's all. And then she was like okay you can go  back to do whatever you're doing. At the time this was very hard for me to process because I was in a university which is all about comparing people based on like what their exam score was. It turns out that out there in the world, there are no exams that everybody takes that are standardized anymore. All that matter  is what you go and get done on your own particular path. So, comparing yourselves to other people becomes meaningless rapidly as what really matter is what you could do yourself, like what you're capable of and what you bother to do and how you choose to spend your time. It took years of this two-word phrase &quot;don't compare&quot; to marinate inside of me and for me to realize that my self-worth really has noting to do with what other people can do or whether I can do it better than them or worse than them. It has everything to do with what i've done and what  i'm gonna do next and how I spend my time and better myself. I should just focus on improving myself and forget about what everybody else is doing. (John Denero)</p>
+</blockquote>
+<blockquote>
+<p>It is something that took me a long time in life to understand not to compare. And there's a trap too that we do. We compare for example how big our house is to that one friend and how much money we make to another friend, and the kind of clothes we have to this friend and how smart we are to that friend. We pick and choose these things and that's first of all, even doing that individually is meaningless right? But it's also a trap and this is the problem with social media, you see these sore of curated worlds of other people and it's a trap. One of the great things of getting older is you will get there, I promise, you will realize it's a trap and comparing means absolutely noting. It really is a very internal thing of what are you doing, who do you want to be, how do you want to go through this world, how do you want to treat other people. At the end of the day, that, and almost noting else, is going to matter. And you got to just trust that it's going to be there. (Hany Faird)</p>
+</blockquote>
+<figure data-type="image" tabindex="1"><img src="https://311zzb.github.io/post-images/1641911821667.png" alt="" loading="lazy"></figure>
+<p>如果这篇文章对你有帮助，考虑给我的<a href="https://github.com/311zzb/cs61a_fall2020">CS61a fall 2020 repository</a>点个star，谢谢。</p>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://311zzb.github.io/post/shuang-fei-zhuan-ma-6-ge-yue-kao-qu-ming-gu-wu-da-xue-qing-bao-xue-zhi-neng-sisutemudong-jing-da-xue-xin-ling-yu-ren-jian-huan-jing-jing-yan-fen-xiang/" class="post-title gt-a-link">
+                    双非转码6个月考取名古屋大学情报学知能システム+東京大学新領域人間環境经验分享
+                </a>
+            </div>
+        
+
+        
+
+        
+            
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+<script>
+    // md5.min.js
+    !function(n){
+        "use strict";
+        function d(n,t){var r=(65535&n)+(65535&t);return(n>>16)+(t>>16)+(r>>16)<<16|65535&r}
+        function f(n,t,r,e,o,u){return d((c=d(d(t,n),d(e,u)))<<(f=o)|c>>>32-f,r);var c,f}
+        function l(n,t,r,e,o,u,c){return f(t&r|~t&e,n,t,o,u,c)}
+        function v(n,t,r,e,o,u,c){return f(t&e|r&~e,n,t,o,u,c)}
+        function g(n,t,r,e,o,u,c){return f(t^r^e,n,t,o,u,c)}
+        function m(n,t,r,e,o,u,c){return f(r^(t|~e),n,t,o,u,c)}
+        function i(n,t){var r,e,o,u,c;n[t>>5]|=128<<t%32,n[14+(t+64>>>9<<4)]=t;var f=1732584193,i=-271733879,a=-1732584194,h=271733878;for(r=0;r<n.length;r+=16)f=l(e=f,o=i,u=a,c=h,n[r],7,-680876936),h=l(h,f,i,a,n[r+1],12,-389564586),a=l(a,h,f,i,n[r+2],17,606105819),i=l(i,a,h,f,n[r+3],22,-1044525330),f=l(f,i,a,h,n[r+4],7,-176418897),h=l(h,f,i,a,n[r+5],12,1200080426),a=l(a,h,f,i,n[r+6],17,-1473231341),i=l(i,a,h,f,n[r+7],22,-45705983),f=l(f,i,a,h,n[r+8],7,1770035416),h=l(h,f,i,a,n[r+9],12,-1958414417),a=l(a,h,f,i,n[r+10],17,-42063),i=l(i,a,h,f,n[r+11],22,-1990404162),f=l(f,i,a,h,n[r+12],7,1804603682),h=l(h,f,i,a,n[r+13],12,-40341101),a=l(a,h,f,i,n[r+14],17,-1502002290),f=v(f,i=l(i,a,h,f,n[r+15],22,1236535329),a,h,n[r+1],5,-165796510),h=v(h,f,i,a,n[r+6],9,-1069501632),a=v(a,h,f,i,n[r+11],14,643717713),i=v(i,a,h,f,n[r],20,-373897302),f=v(f,i,a,h,n[r+5],5,-701558691),h=v(h,f,i,a,n[r+10],9,38016083),a=v(a,h,f,i,n[r+15],14,-660478335),i=v(i,a,h,f,n[r+4],20,-405537848),f=v(f,i,a,h,n[r+9],5,568446438),h=v(h,f,i,a,n[r+14],9,-1019803690),a=v(a,h,f,i,n[r+3],14,-187363961),i=v(i,a,h,f,n[r+8],20,1163531501),f=v(f,i,a,h,n[r+13],5,-1444681467),h=v(h,f,i,a,n[r+2],9,-51403784),a=v(a,h,f,i,n[r+7],14,1735328473),f=g(f,i=v(i,a,h,f,n[r+12],20,-1926607734),a,h,n[r+5],4,-378558),h=g(h,f,i,a,n[r+8],11,-2022574463),a=g(a,h,f,i,n[r+11],16,1839030562),i=g(i,a,h,f,n[r+14],23,-35309556),f=g(f,i,a,h,n[r+1],4,-1530992060),h=g(h,f,i,a,n[r+4],11,1272893353),a=g(a,h,f,i,n[r+7],16,-155497632),i=g(i,a,h,f,n[r+10],23,-1094730640),f=g(f,i,a,h,n[r+13],4,681279174),h=g(h,f,i,a,n[r],11,-358537222),a=g(a,h,f,i,n[r+3],16,-722521979),i=g(i,a,h,f,n[r+6],23,76029189),f=g(f,i,a,h,n[r+9],4,-640364487),h=g(h,f,i,a,n[r+12],11,-421815835),a=g(a,h,f,i,n[r+15],16,530742520),f=m(f,i=g(i,a,h,f,n[r+2],23,-995338651),a,h,n[r],6,-198630844),h=m(h,f,i,a,n[r+7],10,1126891415),a=m(a,h,f,i,n[r+14],15,-1416354905),i=m(i,a,h,f,n[r+5],21,-57434055),f=m(f,i,a,h,n[r+12],6,1700485571),h=m(h,f,i,a,n[r+3],10,-1894986606),a=m(a,h,f,i,n[r+10],15,-1051523),i=m(i,a,h,f,n[r+1],21,-2054922799),f=m(f,i,a,h,n[r+8],6,1873313359),h=m(h,f,i,a,n[r+15],10,-30611744),a=m(a,h,f,i,n[r+6],15,-1560198380),i=m(i,a,h,f,n[r+13],21,1309151649),f=m(f,i,a,h,n[r+4],6,-145523070),h=m(h,f,i,a,n[r+11],10,-1120210379),a=m(a,h,f,i,n[r+2],15,718787259),i=m(i,a,h,f,n[r+9],21,-343485551),f=d(f,e),i=d(i,o),a=d(a,u),h=d(h,c);return[f,i,a,h]}
+        function a(n){var t,r="",e=32*n.length;for(t=0;t<e;t+=8)r+=String.fromCharCode(n[t>>5]>>>t%32&255);return r}
+        function h(n){var t,r=[];for(r[(n.length>>2)-1]=void 0,t=0;t<r.length;t+=1)r[t]=0;var e=8*n.length;for(t=0;t<e;t+=8)r[t>>5]|=(255&n.charCodeAt(t/8))<<t%32;return r}
+        function e(n){var t,r,e="0123456789abcdef",o="";for(r=0;r<n.length;r+=1)t=n.charCodeAt(r),o+=e.charAt(t>>>4&15)+e.charAt(15&t);return o}
+        function r(n){return unescape(encodeURIComponent(n))}
+        function o(n){return a(i(h(t=r(n)),8*t.length));var t}
+        function u(n,t){return function(n,t){var r,e,o=h(n),u=[],c=[];for(u[15]=c[15]=void 0,16<o.length&&(o=i(o,8*n.length)),r=0;r<16;r+=1)u[r]=909522486^o[r],c[r]=1549556828^o[r];return e=i(u.concat(h(t)),512+8*t.length),a(i(c.concat(e),640))}(r(n),r(t))}
+        function t(n,t,r){return t?r?u(t,n):e(u(t,n)):r?o(n):e(o(n))}
+        "function"==typeof define&&define.amd?define(function(){return t}):"object"==typeof module&&module.exports?module.exports=t:n.md5=t;
+    }(this);
+</script>
+
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '4fc9fd2e3cc0c16e0cf1',
+    clientSecret: 'df8d67adcb3240214315232231a7d90f1adbd094',
+    repo: '311zzb.github.io',
+    owner: '311zzb',
+    admin: ['311zzb'],
+    id: md5(location.pathname),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false       // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+            
+
+            
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first"></div>
+    <div class="social-container">
+        
+            
+                <a href="https://github.com/311zzb" target="_blank">
+                    <i class="fab fa-github gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        
+    </div>
+    <div>
+        Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://311zzb.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

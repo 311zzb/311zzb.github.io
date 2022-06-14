@@ -1,0 +1,1378 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+<meta name="description" content=""/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>Gitlet Design Document | 311zzb</title>
+
+<link rel="shortcut icon" href="https://311zzb.github.io/favicon.ico?v=1655211738195">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://311zzb.github.io/styles/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script>
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-216170282-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+        gtag('config', 'UA-216170282-2');
+    </script>
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            311zzb
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+                <div class="nav-item">
+                    
+                        <a href="/" class="menu gt-a-link">
+                            首页
+                        </a>
+                    
+                </div>
+            
+                <div class="nav-item">
+                    
+                        <a href="/archives" class="menu gt-a-link">
+                            归档
+                        </a>
+                    
+                </div>
+            
+                <div class="nav-item">
+                    
+                        <a href="/tags" class="menu gt-a-link">
+                            标签
+                        </a>
+                    
+                </div>
+            
+                <div class="nav-item">
+                    
+                        <a href="/post/about" class="menu gt-a-link">
+                            关于
+                        </a>
+                    
+                </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1655211738195" action="/search/index.html">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    Gitlet Design Document
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2022-03-02 ·
+                    </time>
+                    
+                        <a href="https://311zzb.github.io/tag/4yc-Dwauuu/" class="post-tags">
+                            # Java
+                        </a>
+                    
+                        <a href="https://311zzb.github.io/tag/dA54dJIhy0/" class="post-tags">
+                            # Develop
+                        </a>
+                    
+                        <a href="https://311zzb.github.io/tag/duSLayaKp/" class="post-tags">
+                            # Works
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>This is the design document of my implementation of Gitlet, a version-control system that mimics some of the basic features of the popular system Git. It passed all tests on the gradescope autograder provided by University of California Berkeley, CS 61B. Source code is available upon request.</p>
+<!-- more -->
+<figure data-type="image" tabindex="1"><img src="https://311zzb.github.io/post-images/1646204028615.png" alt="Gradescope result" loading="lazy"></figure>
+<h2 id="classes-and-data-structures">Classes and Data Structures</h2>
+<h3 id="main">Main</h3>
+<p>Driver class for Gitlet, a subset of the Git version-control system.<br>
+Account for validating the number of arguments and invoking package-private methods according to received commands.<br>
+The cache write back method <code>Cache.writeBack()</code> which enabling the persistence of Gitlet is also invoked in this class.</p>
+<h4 id="fields">Fields</h4>
+<p>This class contains only <code>static</code> methods since <code>Main</code> should not be instantiated.</p>
+<ol>
+<li><code>static final File localCWD  = new File(System.getProperty(&quot;user.dir&quot;))</code><br>
+The current working directory <code>File</code> object.</li>
+<li><code>static String currCommand</code> A static variable that holds the current command. Used during <code>pull</code> command.</li>
+<li><code>public static void main(String[] args)</code> The main method of Gitlet.</li>
+<li><code>private static void assertArgsNum(String[] args, int n)</code><br>
+Throw a GitletException if args <em>don't have</em> exactly n elements.</li>
+<li><code>private static void assertNotArgsNum(String[] args, int n)</code><br>
+Throw a GitletException if args <em>have</em> exactly n elements.</li>
+<li><code>private static String[] getOperands(String[] args)</code><br>
+Strip the first element of the input array and return the rest.</li>
+<li><code>private static void assertString(String expected, String actual)</code><br>
+Assert two <code>String</code> are equal.</li>
+</ol>
+<h3 id="cache">Cache</h3>
+<p>This class is used to house static methods that facilitate lazy loading and caching of persistence.<br>
+This file will set up data structures for caching, load necessary objects,<br>
+and write back the cache at the very end of execution.<br>
+This class will never be instantiated.</p>
+<p>This class defers all <code>HashObject</code> and its subclasses' logic to them.<br>
+For example, instead of deserialize and serialize objects directly,<br>
+<code>Cache</code> class will invoke methods from the corresponding class to do that.</p>
+<p>On the other hand, the <code>Cache</code> class will do all the <code>getxxx()</code> methods which retrieving desired objects lazily<br>
+from the cache.</p>
+<h4 id="fields-2">Fields</h4>
+<ol>
+<li>Caching <code>HashObject</code>
+<ol>
+<li><code>static final Map&lt;String, HashObject&gt; cachedHashObjects</code> A <code>Map</code> that stores cached ID and <code>HashObject</code> pairs.</li>
+<li><code>static Map&lt;String, HashObject&gt; cachedRemoteHashObjects</code> The cache for the remote repository.</li>
+<li><code>private static HashObject getHashObject(String id)</code><br>
+Lazy loading and caching of HashObjects.<br>
+Being <code>private</code> because a <code>HashObject</code> will never be requested as <code>HashObject</code><br>
+(as <code>Commit</code> or <code>Tree</code> or <code>Blob</code> instead).<br>
+Special case: return <code>null</code> if requesting a commit with <code>null</code> or <code>&quot;&quot;</code>.</li>
+<li><code>static Commit getCommit(String id)</code><br>
+A method that lazy-load a <code>Commit</code> with <code>id</code> utilizing <code>getHashObject(String id)</code>.</li>
+<li><code>static Tree getTree(String id)</code><br>
+A method that lazy-load a <code>Tree</code> with <code>id</code> utilizing <code>getHashObject(String id)</code>.</li>
+<li><code>static Blob getBlob(String id)</code><br>
+A method that lazy-load a <code>Blob</code> with <code>id</code> utilizing <code>getHashObject(String id)</code>.</li>
+<li><code>static Commit getLatestCommit()</code> Get the <code>Commit</code> object of the latest commit utilizing <code>getCommit(String id)</code>.</li>
+<li><code>static final Set&lt;String&gt; queuedForWriteHashObjects</code><br>
+New HashObjects' IDs that are queued for writing to filesystem.</li>
+<li><code>static String cacheAndQueueForWriteHashObject(HashObject object)</code><br>
+Manually cache a <code>HashObject</code> by put a <code>HashObject</code> into the cache,<br>
+and queue it for writing to filesystem. Return its ID.</li>
+<li><code>static void writeBackAllQueuedHashObject()</code><br>
+Write back all queued-for-writing <code>HashObjects</code> to filesystem. Invoked upon exit.</li>
+<li><code>static final Set&lt;String&gt; queuedForDeleteHashObject</code><br>
+Deprecated <code>HashObject</code>s' IDs that are queued for deletion from filesystem.</li>
+<li><code>static void queueForDeleteHashObject(String id)</code> Given Qa <code>HashObject</code>'s ID, queue it for deletion.</li>
+<li><code>static void deleteAllQueuedHashObject()</code> Delete all queued-for-deletion <code>HashObject</code>s. Invoked upon exit.</li>
+</ol>
+</li>
+<li>Caching Branches
+<ol>
+<li><code>static final Map&lt;String, String&gt; cachedBranches</code> A <code>Map</code> that stores cached branch name and commit ID pairs.</li>
+<li><code>static Map&lt;String, String&gt; cachedRemoteBranches</code> The cache for the remote repository.</li>
+<li><code>static String getBranch(String branchName)</code> Lazy loading and caching of branches.</li>
+<li><code>static String getLatestCommitID()</code><br>
+A method that lazy-load the ID of the latest commit by <code>getBranch(getHEAD())</code>.</li>
+<li><code>static void cacheBranch(String branchName, String commitID)</code><br>
+Manually cache a <code>Branch</code> by putting a <code>branchName</code> - <code>commitID</code> pair into the cache.</li>
+<li><code>static void wipeBranch(String branchName)</code><br>
+Manually wipe the pointer of a designated branch.</li>
+<li><code>static void writeBackAllBranches()</code><br>
+Write back (update) all branches to filesystem. Invoked upon exit.<br>
+If a branch's pointer is wiped out, delete the branch file in the filesystem.<br>
+Special case: ignore branch with empty name.</li>
+</ol>
+</li>
+<li>Caching <code>HEAD</code>
+<ol>
+<li><code>static String cachedHEAD</code> A <code>String</code> that stores cached <code>HEAD</code>, the current branch's name.</li>
+<li><code>static String cachedRemoteHEAD</code> The cache for the remote repository.</li>
+<li><code>static String getHEAD()</code> Lazy loading and caching of <code>HEAD</code>.</li>
+<li><code>static void cacheHEAD(String branchName)</code><br>
+Manually cache the <code>HEAD</code> by assigning the <code>cachedHEAD</code> to a given <code>branchName</code>.</li>
+<li><code>static void writeBackHEAD()</code> Write back (update) the <code>HEAD</code> file. Invoked upon exit.</li>
+</ol>
+</li>
+<li>Caching <code>STAGE</code> (Stage ID)
+<ol>
+<li><code>static String cachedStageID</code> A <code>String</code> that stores cached <code>STAGE</code>, the ID of the current staging area.</li>
+<li><code>static String cachedRemoteStageID</code> The cache for the remote repository.</li>
+<li><code>static String getStageID()</code><br>
+Lazy loading and caching of STAGE (the ID of the saved staging area).<br>
+Notice: this DOES NOT point to the current staging area after the staging area is modified and before write back.</li>
+<li><code>static void cacheStageID(String newStageID)</code><br>
+Manually cache the <code>STAGE</code> by assigning the <code>cachedStageID</code> to a given <code>stageID</code>.</li>
+<li><code>static void writeBackStageID()</code> Write back STAGE file. Invoked upon exit.</li>
+</ol>
+</li>
+<li>Caching the Stage Area
+<ol>
+<li><code>static Tree cachedStage</code> A <code>Tree</code> that stores cached staging area.</li>
+<li><code>static Tree cachedRemoteStage</code> The cache for the remote repository.</li>
+<li><code>static Tree getStage()</code> Get the <code>Tree</code> object representing the staging area utilizing <code>getTree(getStageID())</code>.</li>
+<li><code>static void cacheStage(Tree stage)</code><br>
+Queue the previous staging area for deletion and manually cache the passed-in Stage.<br>
+Special case:<br>
+queue the previous staging area for deletion only if<br>
+there is a commit,<br>
+and the previous staging area is different from the Tree of the latest commit,<br>
+and the previous staging area is not empty.</li>
+</ol>
+</li>
+<li>MISC
+<ol>
+<li><code>static void writeBack()</code> Write back all caches. Invoked upon exit.</li>
+<li><code>static void cleanCache()</code> Reset all caches. Used for testing proposes.</li>
+<li><code>private static boolean inRemoteRepo()</code> Return <code>true</code> if currently operating on the remote repository.</li>
+</ol>
+</li>
+</ol>
+<h3 id="repository">Repository</h3>
+<p>A class houses static methods related to the whole repository.<br>
+This class will handle all actual Gitlet commands by invoking methods in other classes correctly.<br>
+It also sets up persistence and do additional error checking.</p>
+<h4 id="fields-3">Fields</h4>
+<ol>
+<li>Static Variables
+<ol>
+<li><code>static File CWD</code><br>
+The Current Working Directory. A package-private static variable.</li>
+<li><code>static File GITLET_DIR</code><br>
+The <code>.gitlet</code> directory, where all the state of the repository will be stored. Package-private.</li>
+<li><code>static File HEAD</code><br>
+The <code>.gitlet/HEAD</code> file. This file stores the name of the active branch.</li>
+<li><code>static File STAGE</code><br>
+The <code>.gitlet/STAGE</code> file, where the ID of the current staging area is stored.</li>
+<li><code>static File ALL_COMMITS_ID</code><br>
+The <code>.gitlet/allCommitsID</code> file, which is a serialized <code>Tree</code> that holds all the IDs of existing commits.</li>
+<li><code>static File OBJECTS_DIR</code><br>
+The <code>.gilet/objects</code> directory. This is the object database where all <code>HashObject</code> live.</li>
+<li><code>static File BRANCHES_DIR</code><br>
+The <code>.gitlet/branches</code> directory. Each branch is stored as a file under this directory.</li>
+<li><code>static void assignStaticVariables(File cwd)</code><br>
+Assign the above static variables according to the given <code>CWD</code>.<br>
+This is useful dealing with local and remote repositories.<br>
+The current working directory is passed in as <code>CWD</code> for default, but the remote repository directory<br>
+will be passed in when manipulating it.</li>
+</ol>
+</li>
+<li><code>init</code> command
+<ol>
+<li><code>public static void init()</code><br>
+The method which handles the <code>init</code> command. Implementation details in the Algorithms section.</li>
+<li><code>static void setUpPersistence()</code><br>
+A helper method of <code>init</code> command, set up the persistence directories.<br>
+Implementation details in the Algorithms section.<br>
+This method also checks if there is an existing <code>.gitlet</code> directory and abort the execution if so.</li>
+</ol>
+</li>
+<li><code>add</code> command
+<ol>
+<li><code>public static void add(String fileName)</code><br>
+Execute the add command by adding a copy of the file as it currently exists to the staging area.</li>
+</ol>
+</li>
+<li><code>commit</code> command
+<ol>
+<li><code>public static void commit(String message)</code> Execute the commit command.</li>
+</ol>
+</li>
+<li><code>rm</code> command
+<ol>
+<li><code>public static void rm(String fileName)</code> Execute the rm command. Implementation details in the Algorithms section.</li>
+</ol>
+</li>
+<li><code>log</code> command
+<ol>
+<li><code>public static void log()</code> Execute the log command. Implementation details in the Algorithms section.</li>
+<li><code>private static void log(String CommitID)</code><br>
+Print log information recursively. Starting from the commit with the given commit ID, to the initial commit.</li>
+</ol>
+</li>
+<li><code>global-log</code> command
+<ol>
+<li><code>public static void globalLog()</code><br>
+Print log information about all commits ever made. Implementation details in the Algorithms section.</li>
+</ol>
+</li>
+<li><code>find</code> command
+<ol>
+<li><code>private static final List&lt;String&gt; foundCommitID</code> A list of commit IDs that have the designated commit message.</li>
+<li><code>public static void find(String commitMessage)</code><br>
+Execute the <code>find</code> command. Implementation details in the Algorithms section.</li>
+<li><code>private static void findCheck(String CommitID, String commitMessage)</code><br>
+Check if the designated commit has the designated commit message.</li>
+</ol>
+</li>
+<li><code>status</code> command
+<ol>
+<li><code>public static void status()</code> Execute the status command. Implementation details in the Algorithms section.</li>
+<li>&quot;Modifications Not Staged For Commit&quot;
+<ol>
+<li><code>private static void modificationStatus()</code> Print the &quot;Modifications Not Staged For Commit&quot; status.</li>
+<li><code>private static List&lt;String&gt; modifiedNotStagedFiles()</code><br>
+A private helper method that construct a list of &quot;modified but not staged&quot; files.<br>
+Implementation details in the Algorithms section.</li>
+<li><code>private static Set&lt;String&gt; modifiedStatusFocusFiles()</code><br>
+Return a string <code>Set</code> that contains all file names that should be checked<br>
+(file names in the <code>CWD</code> or the Stage or tracked by the head Commit).</li>
+<li><code>private static boolean modifiedNotStagedFiles1(String fileName)</code><br>
+Return <code>true</code> if a file is tracked in the current commit, changed in the working directory, but not staged (modified).</li>
+<li><code>private static boolean modifiedNotStagedFiles2(String fileName)</code><br>
+Return <code>true</code> if a file is staged for addition, but with different contents than in the working directory (modified).</li>
+<li><code>private static boolean modifiedNotStagedFiles3(String fileName)</code><br>
+Return <code>true</code> if a file is staged for addition, but deleted in the working directory (deleted).</li>
+<li><code>private static boolean modifiedNotStagedFiles4(String fileName)</code><br>
+Return <code>true</code> if a file is not staged for removal,<br>
+but tracked in the current commit and deleted from the working directory (deleted).</li>
+<li><code>static boolean trackedInHeadCommit(String fileName)</code><br>
+Return <code>true</code> if a file is tracked in the head commit.</li>
+<li><code>static boolean changedInCWD(String fileName)</code><br>
+Return <code>true</code> if a file is changed in the <code>CWD</code> (different from its version in the head commit).</li>
+<li><code>static boolean addDiffContent(String fileName)</code><br>
+Return <code>true</code> if a file's version in the stage is different from the working one.</li>
+<li><code>static boolean notInCWD(String fileName)</code><br>
+Return <code>true</code> if a file is not in the <code>CWD</code>.</li>
+</ol>
+</li>
+<li>&quot;Untracked Files&quot;
+<ol>
+<li><code>private static void untrackedStatus()</code> Print the &quot;Untracked Files&quot; status.</li>
+<li><code>private static List&lt;String&gt; untrackedFiles()</code><br>
+Return a list of files that is untracked (neither staged for addition nor tracked by the head commit).</li>
+</ol>
+</li>
+</ol>
+</li>
+<li><code>checkout</code> command
+<ol>
+<li><code>public static void checkout1(String fileName)</code><br>
+Execute checkout command usage 1 (checkout a file to the latest commit).<br>
+Implementation details in the Algorithms section.</li>
+<li><code>public static void checkout2(String commitID, String fileName)</code><br>
+Execute checkout command usage 2 (checkout a file to the given commit).<br>
+Implementation details in the Algorithms section.</li>
+<li><code>public static void checkout3(String branchName)</code><br>
+Execute checkout command usage 3 (checkout all files to the designated branch).<br>
+Implementation details in the Algorithms section.</li>
+<li><code>static void checkoutToCommit(String commitID)</code><br>
+A helper method that checkout to a <code>Commit</code> (with designated ID).</li>
+<li><code>private static void checkoutAllCommitFile(String commitID)</code><br>
+A private helper method that checkout all files that a <code>Commit</code> (with designated ID) tracked.</li>
+<li><code>private static void checkoutCommitFile(Commit commit, String fileName)</code><br>
+A private helper method that checkout a file with <code>fileName</code> from a given <code>Commit</code>.</li>
+</ol>
+</li>
+<li><code>branch</code> command
+<ol>
+<li><code>public static void branch(String branchName)</code><br>
+Execute the branch command. Implementation details in the Algorithms section.</li>
+</ol>
+</li>
+<li><code>rm-branch</code> command
+<ol>
+<li><code>public static void rmBranch(String branchName)</code><br>
+Execute the rm-branch command. Implementation details in the Algorithms section.</li>
+</ol>
+</li>
+<li><code>reset</code> command
+<ol>
+<li><code>public static void reset(String commitID)</code><br>
+Execute the reset command. Implementation details in the Algorithms section.<br>
+Abbreviated commit ID will be handled, and branches will always point to full IDs.</li>
+</ol>
+</li>
+<li><code>merge</code> command
+<ol>
+<li><code>public static void merge(String branchName)</code><br>
+Execute the merge command (merge files from the given branch into the current branch).<br>
+Implementation details in the Algorithms section.</li>
+<li><code>private static void mergeModifyCWD(Commit curr, Commit other, Map&lt;String, Set&lt;String&gt;&gt; mergeModifications)</code><br>
+Modify files in the <code>CWD</code> (either use the version in the other branch, or make a conflict file) accordingly.</li>
+<li><code>private static void makeConflict(Set&lt;String&gt; files, Commit curr, Commit other)</code><br>
+Modify all conflict files and add them to the stage.</li>
+<li><code>private static String makeConflictContent(String fileName, Commit curr, Commit other)</code><br>
+Return the right content for a conflict file after merging.</li>
+<li><code>private static void useOther(Set&lt;String&gt; files, Commit other)</code><br>
+Modify files in <code>CWD</code> to their versions in the other commit, and stage the change (add or rm).</li>
+<li><code>private static Map&lt;String, Set&lt;String&gt;&gt; mergeWillModify(Commit split, Commit curr, Commit other)</code><br>
+Perform the checks for the merge command and return a <code>Map</code> of necessary modifications.</li>
+<li><code>private static Map&lt;String, Set&lt;String&gt;&gt; mergeLogic(Set&lt;String&gt; focusFiles, Commit split, Commit curr, Commit other)</code><br>
+A private helper method that captures the logic of the merge command.</li>
+<li><code>private static void mergeChecks1(Commit curr, Commit other)</code> Perform checks for the merge command.</li>
+<li><code>private static void fastForward(Commit other)</code><br>
+Fast-forward the current branch to the designated commit and print information.<br>
+Only called when the split commit is the same as the current commit.<br>
+Special case: do not print fast-forward info when pulling.</li>
+<li><code>private static void mergeChecks2(Set&lt;String&gt; changingFiles)</code> Perform checks for the merge command.</li>
+</ol>
+</li>
+<li>misc
+<ol>
+<li><code>private static void assertGITLET()</code> Assert the <code>CWD</code> contains a <code>.gitlet</code> directory.</li>
+<li><code>private static void overwriteCWDFile(String fileName, Blob overwriteSrc)</code><br>
+Overwrite the file in <code>CWD</code> of designated file name with the content in the given <code>Blob</code> object.</li>
+<li><code>static void sortLexico(List&lt;String&gt; list)</code> Sort a string <code>List</code> in lexicographical order in place.</li>
+<li><code>static void deleteCWDFiles()</code> Delete all files in the <code>CWD</code>.</li>
+<li><code>private static Set&lt;String&gt; CWDFilesSet()</code> Return a Set of all files' names in the <code>CWD</code>.</li>
+<li><code>private static&lt;T&gt; Set&lt;T&gt; combineSets(Set&lt;T&gt;... sets)</code> Generic method to merge (union) multiple sets in Java.</li>
+<li><code>static void printAndExit(String msg)</code> Print a message and exit the execution with status <code>0</code>.</li>
+</ol>
+</li>
+</ol>
+<h3 id="branch">Branch</h3>
+<p>This class houses static methods that related to branch and HEAD.<br>
+It contains methods for loading and writing branch files and the HEAD file.<br>
+This class will never be instantiated since there are only static methods.</p>
+<h4 id="fields-4">Fields</h4>
+<ol>
+<li><code>static String loadBranch(String branchName)</code><br>
+Load a branch file from filesystem with designated name.<br>
+Return <code>null</code> if the branch name is <code>&quot;&quot;</code> (nothing) or there is no branch.<br>
+Invoked by the Cache class.</li>
+<li><code>static boolean existBranch(String branchName)</code> Return <code>true</code> if a branch exists.</li>
+<li><code>static List&lt;String&gt; loadAllBranches()</code><br>
+Load all branch files from the filesystem. Return a <code>List</code> contains all commit IDs that are pointed by a branch.</li>
+<li><code>static void branchStatus()</code> Print the &quot;Branches&quot; status. Implementation details in the Algorithms section.</li>
+<li><code>static void writeBranch(String branchName)</code><br>
+Get a branch's information from cache and write it back to filesystem. Invoked by the Cache class.</li>
+<li><code>static void deleteBranch(String branchName)</code><br>
+Delete the designated branch in the filesystem. Invoked by the Cache class.</li>
+<li><code>static void mkNewBranch(String branchName, String commitID)</code><br>
+Make a new branch with designated name at the latest commit by caching it manually.</li>
+<li><code>static void moveCurrBranch(String commitID)</code> Make the current branch pointing to a designated commit.</li>
+<li><code>static void moveBranch(String branchName, String commitID)</code><br>
+Move the designated branch to point to a commit with designated ID.</li>
+<li><code>static String loadHEAD()</code><br>
+Load the <code>HEAD</code> file and return the current branch's name. Invoked by the Cache class.</li>
+<li><code>static void writeHEAD()</code><br>
+Get the <code>HEAD</code> from cache and write it back to filesystem. Invoked by the Cache class.</li>
+<li><code>static void moveHEAD(String branchName)</code> Make the <code>HEAD</code> pointing to a designated branch.</li>
+<li><code>private static File branchFile(String branchName)</code> Get the <code>File</code> object of a branch with designated name.</li>
+<li><code>private static List&lt;String&gt; allBranches()</code><br>
+Return a <code>List</code> of all branches' names. Support fetched remote branches.</li>
+</ol>
+<h3 id="stage">Stage</h3>
+<p>This class houses static methods that related to Stage (the staging area).<br>
+It contains methods for loading and writing the <code>STAGE</code> file, as well as making a new staging area.<br>
+This class will never be instantiated since there are only static methods.</p>
+<h4 id="fields-5">Fields</h4>
+<ol>
+<li><code>static String loadStageID()</code><br>
+Return the ID of the current staging area (a <code>Tree</code> object). Invoked by the Cache class.</li>
+<li><code>static void putInStage(String fileName, String BlobID)</code><br>
+Copy the staging area and add a <code>fileName</code> - <code>BlobID</code> pair.<br>
+Mark the previous staging area <code>Tree</code> for deletion.<br>
+This function should only be invoked once per run.</li>
+<li><code>static void removeFromStage(String fileName)</code><br>
+Copy the staging area and remove the entry with a specific <code>fileName</code> (if exists) from it.<br>
+Mark the previous staging area <code>Tree</code> for deletion.<br>
+This function should only be invoked once per run.</li>
+<li><code>static void writeStageID()</code> Write the stage ID in cache back to filesystem. Invoked by the Cache class.</li>
+<li><code>static void mkNewStage()</code> Make a new stage (a <code>Tree</code> object) and cache its ID.</li>
+<li><code>static void addToStage(String fileName)</code><br>
+Add a file to the current staging area. Implementation details in the Algorithms section.</li>
+<li><code>static void stageStatus()</code> Print the status information related with the staging area.</li>
+<li><code>private static List&lt;String&gt; stagedFiles()</code> Return a sorted List of file names in the current staging area.</li>
+<li><code>private static void stagedFilesStatus()</code><br>
+Print the &quot;Staged Files&quot; status. Implementation details in the Algorithms section.</li>
+<li><code>private static void removedFilesStatus()</code><br>
+Print the &quot;Removed Files&quot; status. Implementation details in the Algorithms section.</li>
+<li><code>static boolean isStagedForAdd(String fileName)</code> Return <code>true</code> if a designated file is staged for <em>addition</em>.</li>
+<li><code>static boolean isStagedForRemoval(String fileName)</code> Return <code>true</code> if a designated file is staged for <em>removal</em>.</li>
+</ol>
+<h3 id="hashobject">HashObject</h3>
+<p>This class represents a <code>HashObject</code> that will be serialized within <code>.gitlet/objects</code>, named after its SHA-1.<br>
+<code>HashObject</code> is an implementation of <code>Serializable</code> and <code>Dumpable</code>.<br>
+This file has helper methods that will return the SHA-1 (ID) of a <code>HashObject</code>.<br>
+As well as static methods that returning the <code>HashObject</code> object corresponding to its <code>ID</code> (SHA-1),<br>
+and write to or delete from the object database a <code>HashObject</code>.</p>
+<h4 id="fields-6">Fields</h4>
+<ol>
+<li><code>private static final Boolean OPTIMIZATION</code><br>
+Allow you to switch between flat <code>objects</code> directory (easy to debug) and HashTable <code>objects</code> directory (better performance).<br>
+Notice: this should be consistence for a single Gitlet repository.</li>
+<li><code>String id()</code> Get the SHA-1 of <code>THIS</code>.</li>
+<li><code>public void dump()</code> Print the type of this object on System.out.</li>
+<li><code>static HashObject loadHashObject(String id)</code> Load a type object with its ID.<br>
+Special case: return <code>null</code> if told to load an object that does not exist.</li>
+<li><code>static void writeCachedHashObject(String id)</code> Write a cached HashObject with ID in cachedObjects to filesystem.</li>
+<li><code>static void deleteHashObject(String id)</code> Delete a HashObject from filesystem.</li>
+<li><code>static private File optimizedObjectIDFolder(String id)</code><br>
+Helper method that returns the housing directory of a <code>HashObject</code> with the given ID.<br>
+Used in the optimized object database.</li>
+<li><code>static private File optimizedObjectIDFile(String id)</code><br>
+Helper method that returns the file of a <code>HashObject</code> with the given ID.<br>
+Used in the optimized object database.</li>
+<li><code>static private File optimizedObjectAbbrevIDFile(String id)</code><br>
+Helper method that return the file of a <code>HashObject</code> with the given abbreviated ID.<br>
+Used in the optimized object database.</li>
+</ol>
+<p>Despite <code>HashObject</code> should be instantiated very often, it has no constructor method(s).<br>
+Any <code>HashObject</code> is designed to be instantiated as a more specific subclass, namely <code>Commit</code>, <code>Tree</code>, or <code>Blob</code>.</p>
+<h3 id="commit">Commit</h3>
+<p>This class represents a <code>Commit</code> in Gitlet, it extends the <code>HashObject</code> class.<br>
+Each instance of <code>Commit</code> have several instance variables such as commit message and time stamp.<br>
+This file also has helper methods that unlocks instance variable<br>
+as well as static method that carry out the procedure to make a new commit.</p>
+<h4 id="fields-7">Fields</h4>
+<ol>
+<li><code>private final String _message</code> The commit message.</li>
+<li><code>private final String _parentCommitID</code> The ID of the parent commit.</li>
+<li><code>private final String _parentMergeCommitID</code> The ID of the second parent (if any).</li>
+<li><code>private final Date _timeStamp</code> A time stamp of the commit been made.</li>
+<li><code>private final String _treeID</code> The ID of the associated <code>Tree</code> object.</li>
+<li><code>private Commit(String parentCommitID, String message, String treeRef)</code><br>
+The constructor of <code>Commit</code> class. This method is <code>private</code><br>
+because no &quot;naked&quot; instantiation of <code>Commit</code> is allowed outside the <code>Commit</code> class.<br>
+Additionally, the time stamp is set to <code>1970.01.01 00:00:00</code> for initial commit.</li>
+<li><code>private Commit(String firstCommitID, String secondCommitID, String message, String treeRef)</code><br>
+Constructor for merge commits.</li>
+<li><code>public String toString()</code> Content-addressable overriding <code>toString()</code> method.</li>
+<li><code>String logString()</code> Return the log information of this <code>Commit</code>.</li>
+<li><code>public void dump()</code> Print information of this <code>Commit</code> on <code>System.out</code>.</li>
+<li><code>String getMessage()</code> Get the message of this <code>Commit</code>.</li>
+<li><code>String getParentCommitID()</code> Get the ID of the parent commit.</li>
+<li><code>String getParentMergeCommitID()</code> Get the ID of the second parent commit.</li>
+<li><code>Commit getParentCommit()</code> Get the <code>Commit</code> object of the parent commit.</li>
+<li><code>Commit getParentMergeCommit()</code> Get the <code>Commit</code> object ot the second parent commit.</li>
+<li><code>String getCommitTreeID()</code> Get the ID of the associating <code>Tree</code> of this commit.</li>
+<li><code>Tree getCommitTree()</code> Get the associating <code>Tree</code> of this commit.</li>
+<li><code>String getBlobID(String fileName)</code> Get the ID of the <code>Blob</code> of a designated file name in this commit.</li>
+<li><code>String getFileContent(String fileName)</code> Return the content of a designated file name in this commit.<br>
+Special case: return an empty <code>String</code> if there is no corresponding <code>Blob</code>.</li>
+<li><code>Boolean trackedFile(String fileName)</code> Return whether this <code>Commit</code> contains a file with <code>fileName</code>.</li>
+<li><code>Set&lt;String&gt; trackedFiles()</code> Return a string <code>Set</code> of tracked files of this commit.</li>
+<li><code>static void mkCommit(String message)</code> Factory method. Make a new <code>Commit</code>.<br>
+Implementation details in the Algorithm section.</li>
+<li><code>static void mkMergeCommit(String givenBranchName, Boolean conflicted)</code><br>
+Factory method. Make a new merge Commit.</li>
+<li><code>static Commit lca(Commit commit1, Commit commit2)</code> Return the latest common ancestor (LCA) of two <code>Commit</code>s.</li>
+<li><code>static Set&lt;String&gt; ancestors(Commit commit)</code><br>
+Recursively collect and return a <code>Set</code> of all ancestors' ID of the given <code>Commit</code> object, including merge parents.<br>
+Special case: return an empty <code>Set</code> if the given <code>Commit</code> is <code>null</code>.</li>
+<li><code>static void recordCommitID(String commitID)</code> Record a new commit's ID to the <code>.gitlet/allCommitsID</code> file.</li>
+<li><code>static Tree getAllCommitsID()</code> Return a <code>Tree</code> object that captures all IDs of commits ever made.</li>
+</ol>
+<h3 id="tree">Tree</h3>
+<p>Represent a Gitlet <code>Tree</code>, corresponding to UNIX directory entries.<br>
+Implements <code>Iterable&lt;String&gt;</code>, extends <code>HashObject</code>.<br>
+An instance of <code>Tree</code> object contains a <code>TreeMap</code> as instance variable, which has zero or more entries.<br>
+Each of these entries is a <code>fileName</code> - <code>BlobID</code> pair.<br>
+This class also contains <code>Tree</code> related static methods.</p>
+<h4 id="fields-8">Fields</h4>
+<ol>
+<li><code>private final Map&lt;String, String&gt; _structure</code> The <code>TreeMap</code> that stores <code>fileName</code> - <code>blobID</code> pairs.</li>
+<li><code>Tree()</code> The constructor of <code>Tree</code> class.</li>
+<li><code>Tree(Tree another)</code> A constructor that deep-copy the passed-in <code>Tree</code>.</li>
+<li><code>public String toString()</code> Content-addressable overriding <code>toString()</code> method.</li>
+<li><code>public void dump()</code> Print information of this <code>Tree</code> on <code>System.out</code>.</li>
+<li><code>boolean isEmpty()</code> Return whether this <code>Tree</code> is empty.</li>
+<li><code>boolean containsFile(String fileName)</code> Return <code>true</code> if a <code>Tree</code> contains a file with <code>fileName</code>.</li>
+<li><code>List&lt;String&gt; trackedFiles()</code><br>
+Return the sorted list of file names in this <code>Tree</code> following a Java string-comparison order.</li>
+<li><code>void putBlobID(String fileName, String blobRef)</code> Record a <code>fileName</code> - <code>blobID</code> pairs.</li>
+<li><code>void removeBlobID(String fileName)</code> Remove an entry with <code>fileName</code> as the key from this <code>Tree</code>.</li>
+<li><code>String getBlobID(String fileName)</code> Return the ID of a <code>Blob</code> according to a given <code>fileName</code> (if exists).</li>
+<li><code>Blob getBlob(String fileName)</code> Return a <code>Blob</code> according to a given <code>fileName</code> (if exist).</li>
+<li><code>public Iterator&lt;String&gt; iterator()</code> Returns an <code>Iterator</code> of this <code>Tree</code>, namely the <code>keySet()</code> of its <code>TreeMap</code>.</li>
+<li><code>void updateWith(Tree updater)</code><br>
+Update this <code>Tree</code> with the entries in the given <code>Tree</code>.<br>
+Special case: remove the corresponding pair from <code>this</code> if the value to a key in the updater is <code>null</code>.</li>
+<li><code>static String mkNewEmptyTree()</code> Factory method.<br>
+Creates an empty <code>Tree</code>, cache it and return its ID.</li>
+<li><code>static Tree getLatestCommitTree()</code> Factory method. Return the copy of the <code>Tree</code> of the latest commit if exists.<br>
+Special case: return <code>null</code> if there is no latest commit.</li>
+<li><code>static String mkCommitTree()</code><br>
+Factory method.<br>
+Return a <code>Tree</code> that capture the <code>Tree</code> from the latest commit as well as current addition and removal status.<br>
+Implementation details in the Algorithm section.<br>
+Special cases: make a new empty tree if there is no <code>Tree</code> in the latest commit.</li>
+<li><code>private static Tree copyLatestCommitTree()</code> Factory method. Return a deep-copy of the <code>Tree</code> in the latest commit.</li>
+<li><code>static Teww CWDFiles()</code> Return a temporary <code>Tree</code> that capture information of files in <code>CWD</code>.</li>
+</ol>
+<h3 id="blob">Blob</h3>
+<p>Represent a Gitlet <code>Blob</code>, corresponding to UNIX files.<br>
+Extends <code>HashObject</code>.<br>
+<code>Blob</code> has one instance variable <code>_content</code>, which holding the content of a file.<br>
+This variable enables a <code>Blob</code> to represent a version of such file.<br>
+This class also has <code>Blob</code> related static methods.</p>
+<h4 id="fields-9">Fields</h4>
+<ol>
+<li><code>private final String _content</code> The instance variable that hold the content of a version of a file.</li>
+<li><code>Blob(String content)</code> The private constructor of <code>Blob</code>.<br>
+No &quot;naked&quot; instantiation of <code>Blob</code> is allowed.</li>
+<li><code>String getContent()</code> Unlocks the content of a <code>Blob</code>.</li>
+<li><code>public String toString()</code> Content-addressable overriding <code>toString()</code> method.</li>
+<li><code>public void dump()</code> Print information of this <code>Tree</code> on <code>System.out</code>.</li>
+<li><code>static String mkBlob(String fileName)</code><br>
+Factory method. Make a new <code>Blob</code> with a designated file. Cache it and queue it for writing to filesystem.<br>
+Special case: adding a file that not exists in the <code>CWD</code> means adding it for removal.</li>
+<li><code>static String currFileID(String fileName)</code><br>
+Return the <code>ID</code> of a designated file's <code>Blob</code> without cache or saving a <code>Blob</code>.</li>
+</ol>
+<h3 id="remote">Remote</h3>
+<p>Represent a remote Gitlet repository and accommodating remote commands related methods.</p>
+<h4 id="fields-10">Fields</h4>
+<ol>
+<li>Non-static methods
+<ol>
+<li><code>File _remoteWD</code> Stores the working directory of this remote repository as a <code>File</code> object.</li>
+<li><code>private Remote(File remoteGitlet)</code> Construct a remote repository representation.</li>
+<li><code>private void remoteRunner()</code><br>
+Change the <code>CWD</code> in the Gitlet running environment to the remote repository's working directory.<br>
+Must call before commanding the remote repository.</li>
+<li><code>private void localRunner()</code><br>
+Change the <code>CWD</code> in Gitlet running environment to the local repository's working directory.</li>
+<li>Methods that simply calling <code>remoteRunner()</code> and <code>localRunner()</code> before and after<br>
+calling the method with the same signature from other classes.
+<ol>
+<li><code>private String getHEAD()</code></li>
+<li><code>private Commit getLatestCommit()</code></li>
+<li><code>private String getBranch(String branchName)</code></li>
+<li><code>private Commit getCommit(String id)</code></li>
+<li><code>private String cacheAndQueueForWriteHashObject(HashObject object)</code></li>
+<li><code>private void writeBack()</code></li>
+<li><code>private Set&lt;String&gt; commitAncestors(Commit commit)</code></li>
+<li><code>private void moveHEAD(String branchName)</code></li>
+<li><code>private void moveCurrBranch(String commitID)</code></li>
+<li><code>private void checkoutToCommit(String commitID)</code></li>
+<li><code>private boolean existBranch(String branchName)</code></li>
+<li><code>private void mkNewBranch(String branchName)</code></li>
+<li><code>private void mkNewStage()</code></li>
+<li><code>private Tree getCommitTree(Commit commit)</code></li>
+<li><code>private Blob getBlob(String blobID)</code></li>
+<li><code>private void recordCommitID(String commitID)</code></li>
+</ol>
+</li>
+</ol>
+</li>
+<li>Static methods
+<ol>
+<li><code>add-remote</code> command
+<ol>
+<li><code>public static void addRemote(String remoteName, String path)</code><br>
+Execute the add-remote command by creating a reference to the remote repository.</li>
+<li><code>private static void writeRemote(File remoteFile, String path)</code><br>
+Write a remote repository reference.</li>
+<li><code>static File readRemote(String remoteName)</code><br>
+Get the <code>File</code> referencing the remote (in the local repository).</li>
+</ol>
+</li>
+<li><code>rm-remote</code> command
+<ol>
+<li><code>static File getRemoteGitlet(String remoteName)</code><br>
+Get the <code>File</code> of the remote <code>.gitlet</code> directory.</li>
+</ol>
+</li>
+<li><code>push</code> command
+<ol>
+<li><code>public static void push(String remoteName, String remoteBranchName)</code><br>
+Executing the <code>push</code> command.</li>
+<li><code>private static void pushReset(Remote remote, String commitID, String remoteBranchName)</code><br>
+Fast-forward the remote repository.</li>
+<li><code>private static Set&lt;String&gt; commitsToPush(Commit localC, Commit remoteC, Remote remote)</code><br>
+Return a <code>Set</code> of <code>String</code> containing the IDs of commits that should be pushed to the remote repo.</li>
+<li><code>private static void pushCommits(Set&lt;String&gt; commitIDs, Remote remote)</code><br>
+Push all <code>Commit</code> with the designated ID in the <code>Set</code>,<br>
+and its associating <code>Tree</code> and <code>Blob</code> to the remote repository.</li>
+<li><code>private static void pushCommit(Commit commit, Remote remote)</code><br>
+Push a single <code>Commit</code> and its associating <code>Tree</code> and <code>Blob</code> to the remote repository.</li>
+</ol>
+</li>
+<li><code>fetch</code> command
+<ol>
+<li><code>public static void fetch(String remoteName, String remoteBranchName)</code><br>
+Execute the <code>fetch</code> command. Implementation details in the Algorithms section.</li>
+<li><code>private static Set&lt;String&gt; commitsToFetch(Commit localC, Commit remoteC, Remote remote)</code><br>
+Return a <code>Set</code> of String containing the IDs of commits that should be fetched from the remote repo.</li>
+<li><code>private static void fetchCommits(Remote remote, Set&lt;String&gt; commitIDs)</code><br>
+Fetch commits that their IDs in the <code>Set</code> to the local repo.</li>
+<li><code>private static void fetchCommit(Remote remote, String commitID)</code><br>
+Fetch a commit to the local repo.</li>
+</ol>
+</li>
+<li><code>pull</code> command
+<ol>
+<li><code>public static void pull(String remoteName, String remoteBranchName)</code><br>
+Execute the <code>pull</code> command. Implementation details in the Algorithms section.</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h3 id="gitlettest">GitletTest</h3>
+<p>This class contains JUnit tests and some helper methods for Gitlet.</p>
+<h4 id="fields-11">Fields</h4>
+<ol>
+<li><code>init</code> command
+<ol>
+<li><code>public void initCommandSanityTest()</code> Sanity test for init command.</li>
+</ol>
+</li>
+<li><code>add</code> command
+<ol>
+<li><code>public void addCommandSanityTest()</code> Sanity test for add command.</li>
+<li><code>public void addCommandTwiceTest()</code> Test using add command twice.</li>
+</ol>
+</li>
+<li><code>commit</code> command
+<ol>
+<li><code>public void commitSanityTest()</code> Sanity test for commit command.</li>
+<li><code>public void dummyCommitTest()</code> Dummy commit test (commit without adding anything).</li>
+<li><code>public void commitAndAddTest()</code> Add a file, make a commit, and add another file.</li>
+<li><code>public void addAndRestoreTest()</code> Make a commit, change the file and add, then change back and add.<br>
+The staging area should be empty.</li>
+</ol>
+</li>
+<li><code>rm</code> command
+<ol>
+<li><code>public void rmUnstageTest()</code> The rm command should unstage the added file.</li>
+<li><code>public void rmCommitTest()</code><br>
+Add a file, commit, and rm it, commit again.<br>
+The latest commit should have an empty commit tree.<br>
+The file in the <code>CWD</code> should be deleted.</li>
+</ol>
+</li>
+<li><code>log</code> command
+<ol>
+<li><code>public void logSanityTest()</code> Sanity test for log command. Init and log.</li>
+<li><code>public void simpleLogTest()</code> Simple test for log command. Init, commit, and log.</li>
+<li><code>public void normalLogTest()</code> Normal test for log command. Init, commit, commit, and log.</li>
+</ol>
+</li>
+<li><code>global-log</code> command
+<ol>
+<li><code>public void globalLogSanityTest()</code> Sanity test for global-log command.</li>
+<li><code>public void globalLogBranchTest()</code> Test for global-log command with branching. Need implementation.</li>
+</ol>
+</li>
+<li><code>find</code> command
+<ol>
+<li><code>public void findSanityTest()</code> Sanity test for find command.</li>
+<li><code>public void findBranchTest()</code> Test for find command with branching. Need implementation.</li>
+</ol>
+</li>
+<li><code>status</code> command
+<ol>
+<li><code>public void statusBasicTest()</code> Basic test for status command.</li>
+<li><code>public void statusModification3Test()</code><br>
+Test extra functions (&quot;Modification Not Staged For Commit&quot;) condition 3 of status command.</li>
+<li><code>public void statusModification4Test()</code><br>
+Test extra functions (&quot;Modification Not Staged For Commit&quot;) condition 4 of status command.</li>
+<li><code>public void statusUntrackedTest()</code> Test extra functions (&quot;Untracked Files&quot;) of status command.</li>
+</ol>
+</li>
+<li><code>checkout</code> command
+<ol>
+<li><code>public void checkoutHeadFileSanityTest()</code><br>
+Sanity test for checkout usage 1 (checkout a file to the latest commit).</li>
+<li><code>public void checkoutCommitFileSanityTest()</code><br>
+Sanity test for checkout usage 2 (checkout a file to the given commit).</li>
+<li><code>public void checkoutBranchSanityTest()</code><br>
+Sanity test for checkout usage 3 (checkout to a branch).</li>
+</ol>
+</li>
+<li><code>branch</code> command
+<ol>
+<li><code>public void branchSanityTest()</code> Sanity test for branch command.</li>
+</ol>
+</li>
+<li><code>rm-branch</code> command
+<ol>
+<li><code>public void rmBranchSanityTest()</code> Sanity test for rm-branch command.</li>
+</ol>
+</li>
+<li><code>reset</code> command
+<ol>
+<li><code>public void resetSanityTest()</code> Sanity test for reset command.</li>
+</ol>
+</li>
+<li><code>merge</code> command
+<ol>
+<li><code>public void lcaTest()</code> Test the lca method.</li>
+<li><code>public void mergeSanityTest()</code> A sanity test for the merge command.</li>
+<li><code>public void mergeConflictTest()</code> Test merging two branches with conflict.</li>
+<li><code>public void mergeTest()</code> A hard (and comprehensive) test for the merge command.</li>
+</ol>
+</li>
+<li><code>add-remote</code> command
+<ol>
+<li><code>public void addRemoteTest()</code>A sanity test for <code>add-remote</code>.</li>
+</ol>
+</li>
+<li><code>push</code> command
+<ol>
+<li><code>public void pushTest()</code> A sanity test for add-remote command.</li>
+</ol>
+</li>
+<li><code>fetch</code> command
+<ol>
+<li><code>public void fetchTest()</code> A sanity test for fetch command.</li>
+</ol>
+</li>
+<li><code>pull</code> command
+<ol>
+<li><code>public void pullTest()</code> A sanity test for pull command.</li>
+</ol>
+</li>
+<li>Auto grader debug tests
+<ol>
+<li><code>public void test20_status_after_commit()</code></li>
+<li><code>public void test24_global_log_prev()</code></li>
+<li><code>public void test29_bad_checkouts_err()</code></li>
+<li><code>public void test35_merge_rm_conflicts()</code></li>
+<li><code>public void test36a_merge_parent2()</code></li>
+</ol>
+</li>
+<li>misc
+<ol>
+<li><code>static final File CWD</code> The local repository's working directory.</li>
+<li><code>private static void GitletExecute(String... command)</code><br>
+Execute commands with Gitlet and clean the cache after execution.<br>
+Special case: make sure there is no <code>.gitlet</code> directory before the init command. Implemented for testing purposes.</li>
+<li><code>private static void writeTestFile(String fileName, String content)</code><br>
+Write content into a designated file name. Overwriting or creating file as needed.</li>
+<li><code>private static void deleteTestFile(String fileName)</code> Delete the file with the designated name.</li>
+<li><code>private static String readTestFile(String fileName)</code> Read the designated file as String and return it.</li>
+<li><code>private static void deleteDirectory(File directoryToBeDeleted)</code> Delete a directory recursively.</li>
+<li><code>private static void writeAndAdd(String fileName, String content)</code><br>
+Write a test file with the designated file name and content, then add it to the stage.</li>
+<li><code>private static void assertFile(String fileName, String content)</code><br>
+Assert a designated file has the designated content.</li>
+</ol>
+</li>
+</ol>
+<h2 id="algorithms">Algorithms</h2>
+<h3 id="lazy-loading-and-caching">Lazy Loading and Caching</h3>
+<p><strong>Lazy Loading:</strong> Only retrieve information from your file system when you need it, not all at once in the beginning.</p>
+<p><strong>Caching:</strong> Once you load something from your file system, save it in your Java program, so you don’t need to load it<br>
+again. (E.g. as an attribute or an entry in a Map.)</p>
+<p><strong>Writing back:</strong> If you cached something and then modified it, make sure at the end of your Java program, you write<br>
+the changes to your file system.</p>
+<p><a href="https://paper.dropbox.com/doc/Gitlet-Persistence-zEnTGJhtUMtGr8ILYhoab">Reference: Gitlet Persistence</a></p>
+<p>In this implementation of Gitlet, I used a standalone java Class <code>Cache.java</code> to accommodate code for lazy-loading and<br>
+caching.<br>
+During lazy loading, the <code>load****()</code> method for specific Class is invoked to retrieve an instance of that Class by<br>
+specifying the object's <code>ID</code>. Additionally, <code>Commit</code>, <code>Tree</code>, and <code>Blob</code> don't have standalone <code>load****()</code> methods<br>
+because they are subclasses of <code>HashObject</code>.</p>
+<p>After loading, the cached object is saved into the corresponding static variable.<br>
+Namely, a <code>TreeMap</code> <code>cachedHashObjects</code> will store <code>ID</code> to <code>HashObject</code> pairs,<br>
+another <code>TreeMap</code> <code>cachedBranches</code> will store <code>branchName</code> to <code>commitID</code> pairs,<br>
+a <code>String</code> <code>cachedHEAD</code> will store the content of <code>.gitlet/HEAD</code> (the current branch's name),<br>
+and a <code>String</code> <code>cachedStageID</code> will store the content of <code>.gitlet/STAGE</code> (the ID of the staging area <code>Tree</code>).</p>
+<p>Additionally, there is <code>List</code> <code>queuedForWriteHashObjects</code> and <code>queuedForDeleteHashObject</code> that hold IDs that should be<br>
+(re)write to or delete from the filesystem. These <code>List</code>s are updated along the course of execution by<br>
+<code>cacheAndQueueForWriteHashObject(HashObject object)</code> and <code>queueForDeleteHashObject(String id)</code>.<br>
+Note that a <code>HashObject</code> will never be modified after its creation.<br>
+Therefore, no modification of existing <code>HashObject</code>s will be carried out<br>
+thus there is no such <code>queuedForModifyHashObjects</code> data structure.</p>
+<p>At the very end of execution, caches will be written back to filesystem.<br>
+Entries in <code>cachedHashObjects</code>, will be written to or delete from filesystem based on the IDs contained in<br>
+<code>queuedForWriteHashObjects</code> and <code>queuedForDeleteHashObject</code>.<br>
+Additionally, <code>cachedBranches</code>, <code>cachedHEAD</code>, <code>cachedStageID</code> will be rewritten anyway since the size of related<br>
+persistence are trivial for the most time.</p>
+<h3 id="get-the-id-of-a-hashobject">Get the ID of a <code>HashObject</code></h3>
+<p>Every <code>HashObject</code> need to be serialized and saved in filesystem, thus a unique file name (ID) is indispensable.<br>
+We use SHA-1 (Secure Hashcode Algorithm 1) hashcode as a content-addressable ID of every <code>HashOject</code>.<br>
+In order to achieve content-addressability, the following two characteristics is necessary:</p>
+<ol>
+<li>Different <code>HashObject</code>s with identical contents should have the same ID.</li>
+<li>A <code>HashObject</code>'s ID should change after it is modified in terms of its contents.</li>
+</ol>
+<p>To accomplish such requirements, ID of a <code>HashObject</code> is generated from applying SHA-1 on its string representation.<br>
+And subclasses of the <code>HashObject</code> class overrides the default <code>toString()</code> method to make it content-addressable.</p>
+<h3 id="saving-loading-or-deleting-a-hashobject">Saving, loading, or deleting a <code>HashObject</code></h3>
+<p>If the static variable <code>OPTIMIZATION</code> in <code>HashObject</code> class is set to <code>true</code>,<br>
+Gitlet will construct a <code>HashTable</code>-liked structure in the <code>.gitlet/objects</code> directory.<br>
+That is, all <code>HashObject</code> (with a 40-character ID) will be stored under the <code>.gitlet/objects/xx</code> directory<br>
+and named after <code>xxx</code>,<br>
+where <code>xx</code> is the leading two characters of its ID and <code>xxx</code> is the left <code>38</code> characters.<br>
+The point of this optimization is speeding up retrieving <code>Commit</code><br>
+when the user abbreviate commit ID with a unique prefix.<br>
+The real Git is also utilizing this technique.<br>
+When the user provide an abbreviated commit ID, Gitlet will go to the corresponding <code>.gitlet/objects/xx</code> directory<br>
+and iterate through a list of file names in that directory in order to figure out the comprehensive commit ID.</p>
+<p>On the other hand, if <code>OPTIMIZATION</code> is set to <code>false</code>,<br>
+all <code>HashObject</code> will be stored flatly under the <code>.gitlet/objects</code> directory and named after the corresponding ID.<br>
+This set up is might be more convenient when digging into the object database for debugging purposes.<br>
+Due to performance concerns, referring commits with abbreviated IDs is not allowed when <code>OPTIMIZATION</code> is set to <code>false</code>.</p>
+<h3 id="initialize-the-repository">Initialize the repository</h3>
+<ol>
+<li>Set up the repository</li>
+<li>Create an initial commit</li>
+</ol>
+<h4 id="set-up-the-repository">Set up the repository</h4>
+<ol>
+<li>Set up persistence directories</li>
+<li>Make the default branch &quot;master&quot; which is pointing null for now (no pun intended)</li>
+<li>Make the HEAD pointing to the master branch</li>
+<li>Make a new staging area</li>
+<li>Initialize and serialize a <code>Tree</code> to <code>.gitlet/allCommitsID</code></li>
+</ol>
+<h3 id="make-a-commit">Make a <code>Commit</code></h3>
+<ol>
+<li>Get the ID of the latest commit</li>
+<li>Make a commit <code>Tree</code> by copying from the latest commit, and update it with the staging area</li>
+<li>Construct a new <code>Commit</code> object with the <code>private</code> constructor</li>
+<li>Cache the new Commit and queue it for write back</li>
+<li>Move the current branch pointing the new commit</li>
+<li>Make a new staging area</li>
+<li>Record the new commit's ID</li>
+</ol>
+<h4 id="make-a-commit-tree">Make a commit <code>Tree</code></h4>
+<p>A commit <code>Tree</code> is a <code>Tree</code> that every commit uses to record the associated file names and file versions (<code>Blob</code>).</p>
+<ol>
+<li>Get a copy of the <code>Tree</code> of the latest commit</li>
+<li>Get the staging area <code>Tree</code></li>
+<li>Update that copy with the staging area<br>
+(Special case: remove the corresponding pair from that copy if the value to a key in the staging area is <code>null</code>,<br>
+i.e., staged for removal)</li>
+<li>Cache it and queue it for writing</li>
+</ol>
+<h3 id="stage-a-file-for-addition">Stage a file for addition</h3>
+<ol>
+<li>Get the file as its current version, cache it as a Blob (don't queue for write back yet)</li>
+<li>Get the version of the designated file from the latest commit</li>
+<li>Special case:<br>
+If the current version of the file is identical to the version in the latest commit (by comparing IDs),<br>
+do not stage it, and remove it from the staging area if it is already there. End the execution.</li>
+<li>Modify cached staging area</li>
+</ol>
+<h3 id="stage-a-file-for-removal">Stage a file for removal</h3>
+<ol>
+<li>Abort if the file is neither staged nor tracked by the head commit.</li>
+<li>If the file is currently staged for addition, unstage it.</li>
+<li>If the file is tracked in the current commit, stage it for removal and remove it from the <code>CWD</code>.</li>
+</ol>
+<p>When it comes to the design decision of representing &quot;staged for removal&quot;,<br>
+the chosen solution is to treat pairs in the staging tree with <code>&quot;&quot;</code> (an empty <code>String</code>) value as staged for removal.<br>
+That is, when a file is staged for removal:</p>
+<ol>
+<li>It is deleted from the <code>CWD</code> if the user haven't done that.</li>
+<li>It is &quot;added&quot; to the staging area.<br>
+Given the fact that there is no such file in the <code>CWD</code>,<br>
+a {<code>fileName</code> - <code>&quot;&quot;</code>} pair will be written into the staging area.</li>
+<li>When making a commit <code>Tree</code>,<br>
+staged for removal file will be handled and the new commit <code>Tree</code> will not include the staged-for-removal files.</li>
+</ol>
+<p>In this manner, problems with naive approaches (such as introduce a &quot;staging area for removal&quot; <code>Tree</code>)<br>
+is avoided, and the amount of codes to implement the <code>rm</code> command is trivial.</p>
+<h3 id="print-log">Print log</h3>
+<ol>
+<li>Get the ID of the latest commit</li>
+<li>Print log information starting from that commit to the initial commit recursively
+<ol>
+<li>Get the Commit object with the given CommitID</li>
+<li>Print its log information</li>
+<li>Recursively print its ascendants' log information</li>
+</ol>
+</li>
+</ol>
+<h3 id="print-global-log">Print global log</h3>
+<ol>
+<li>Get the allCommitsID <code>Tree</code> which holds all commits' IDs.</li>
+<li>Print log information for each of the IDs.</li>
+</ol>
+<h3 id="the-find-command">The <code>find</code> command</h3>
+<p>This command has similar algorithm with the <code>global-log</code> command.<br>
+Both of these commands cover all commits ever made by the same manner.</p>
+<ol>
+<li>Get the allCommitsID <code>Tree</code> which holds all commits' IDs.</li>
+<li>Check each commit whether it has the designated commit message.</li>
+</ol>
+<h3 id="print-repository-status">Print repository status</h3>
+<p>The status information is consist of the following five parts.</p>
+<ol>
+<li>&quot;Branches&quot;
+<ol>
+<li>Get a list of all branches by reading the filenames in the <code>.gitlet/branches</code> directory.</li>
+<li>Sort the list in lexicographical order.</li>
+<li>Print the header and all branches, print an asterisk before printing the current branch.</li>
+</ol>
+</li>
+<li>&quot;Staged Files&quot; and &quot;Removed Files&quot;
+<ol>
+<li>Get the current staging area, and get a lexicographical sorted list of filenames it currently holds.</li>
+<li>If a <code>filename</code> has an empty corresponding <code>BlobID</code> in the staging area, print it under &quot;Removed Files&quot;;<br>
+if a filename has a valid corresponding <code>BlobID</code> in the staging area, print it under &quot;Staged Files&quot;.</li>
+</ol>
+</li>
+<li>&quot;Modifications Not Staged For Commit&quot;
+<ol>
+<li>Get a Set of all file names that should be checked (file names in the <code>CWD</code>, the staging area, and the head commit).</li>
+<li>Check each file name and fill a List for &quot;modified but not staged files&quot;.<br>
+Conditions are described below.
+<ol>
+<li>Record the file name concatenates <code> (modified)</code> if it satisfies condition 1 or 2.</li>
+<li>Record the file name concatenates <code> (deleted)</code> if it satisfies condition 3 or 4.<br>
+A file name is either marked as modified or marked as deleted or not marked.</li>
+</ol>
+</li>
+<li>Print the List.</li>
+</ol>
+</li>
+<li>&quot;Untracked Files&quot;
+<ol>
+<li>Get a list of all untracked files. A file is untracked if it is neither staged for addition nor tracked by the head commit.</li>
+<li>Print the file names.</li>
+</ol>
+</li>
+</ol>
+<p>Conditions for &quot;Modifications Not Staged For Commit&quot;:</p>
+<ol>
+<li>Tracked in the current commit, changed in the working directory, but not staged.</li>
+<li>Staged for addition, but with different contents than in the working directory.</li>
+<li>Staged for addition, but deleted in the working directory.</li>
+<li>Not staged for removal, but tracked in the current commit and deleted from the working directory.</li>
+</ol>
+<h4 id="get-a-list-of-untracked-files">Get a list of untracked files</h4>
+<ol>
+<li>Get the information of files in the <code>CWD</code> as a <code>Tree</code> object.</li>
+<li>Get the head <code>Commit</code> object.</li>
+<li>Iterate through the file names in the <code>CWD</code>, add it to a list of untracked files if it:
+<ol>
+<li>is not staged for addition (not contained in the staging area or its corresponding <code>Blob</code> ID is empty)</li>
+<li>is not tracked by the head commit</li>
+</ol>
+</li>
+<li>Sort the untracked files list in lexicographical order</li>
+</ol>
+<h3 id="the-checkout-command">The <code>checkout</code> command</h3>
+<h4 id="checkout-a-file-to-head-commit">Checkout a file to <code>HEAD</code> commit</h4>
+<ol>
+<li>Get the ID of the latest commit</li>
+<li>Invoke <code>checkout2(String commitID, String fileName)</code> method with the ID of the latest commit.</li>
+</ol>
+<h4 id="checkout-a-file-to-the-commit-with-the-designated-id">Checkout a file to the commit with the designated ID</h4>
+<ol>
+<li>Get the <code>Commit</code> object with the designated commit ID</li>
+<li>Get the designated file's <code>Blob</code> object form that commit</li>
+<li>Overwrite the file with that name in the <code>CWD</code></li>
+</ol>
+<h4 id="checkout-to-a-designated-branch">Checkout to a designated branch</h4>
+<ol>
+<li>Perform checks: Gitlet will abort if no branch with the given name exists, or that branch is the current branch,<br>
+or a working file is untracked.</li>
+<li>Move the <code>HEAD</code> to that branch.</li>
+<li>Checkout to the commit that the branch is pointing to.</li>
+</ol>
+<h5 id="checkout-to-a-designated-commit">Checkout to a designated commit</h5>
+<ol>
+<li>Delete all files in the <code>CWD</code>.</li>
+<li>Checkout all files tracked by that commit.</li>
+<li>Clean the staging area.</li>
+</ol>
+<h3 id="create-a-new-branch">Create a new branch</h3>
+<p>Creating new branches is carried out when <code>branch</code> or <code>init</code> command is given.<br>
+When creating new branches, the operation under the hood is no more than writing a <code>branchName</code> - <code>CommitID</code> pair<br>
+into the <code>cachedBranches</code> which is then written back to the filesystem upon exit.<br>
+The <code>CommitID</code> assigned to the new branch is always the latest commit (head commit) if there is one.<br>
+For the default &quot;master&quot; branch which is created right before the initial commit,<br>
+its corresponding is <code>null</code> at the very first (but pointed to the initial commit after the initial commit is created).</p>
+<h3 id="remove-a-branch">Remove a branch</h3>
+<p>This command delete the branch with the given name. It does not delete any commits under that branch.</p>
+<ol>
+<li>Abort if the designated branch does not exist</li>
+<li>Abort if the designated branch is the current branch</li>
+<li>Wipe the branch's pointer in the cache and delete the branch file upon exit</li>
+</ol>
+<h3 id="reset-to-a-designated-commit">Reset to a designated commit</h3>
+<ol>
+<li>Perform the checks: the commit with the designated ID exists, and there is no working untracked file.</li>
+<li>Checkout to the designated commit.</li>
+<li>Move the current branch to that commit (The biggest difference between <code>reset</code> and <code>checkout [branch name]</code> command).</li>
+</ol>
+<h3 id="merge-files-from-the-given-branch-into-the-current-branch">Merge files from the given branch into the current branch</h3>
+<p>The <code>merge</code> command is one of the most complicated commands in Gitlet.<br>
+Therefore, the execution of this command is divided to multiple helper methods.<br>
+Generally, the following procedure is followed to execute this command.</p>
+<ol>
+<li>Get the latest <code>Commit</code> object of the current branch, the given branch, and the common ancestors (split commit).</li>
+<li>Perform checks.</li>
+<li>Calculate which files will be changed in what manners, and perform checks.</li>
+<li>Modify the <code>CWD</code> following the result from step 2, staging for addition or removal as we go.</li>
+<li>Make a merge commit.</li>
+</ol>
+<h4 id="get-the-latest-common-ancestor-split-commit-of-two-commits">Get the latest common ancestor (split commit) of two commits</h4>
+<ol>
+<li>Get a <code>Set</code> of all ancestors' ID of a commit.<br>
+This is accomplished by recursively collect all parent commit(s)' ID(s) and their parent(s)' ID(s),<br>
+like breadth-first-search.<br>
+Note that a merge commit has two parents, both will be collected as its ancestor.</li>
+<li>Starting from the other commit, breadth-first-search the first commit that its ID is in the <code>Set</code>.</li>
+</ol>
+<h4 id="determine-which-files-will-be-changed-in-what-manners">Determine which files will be changed in what manners</h4>
+<ol>
+<li>Get a Set of file names that should be checked<br>
+by combining sets of file names tracked by the split, current, and the other branch's head commits.</li>
+<li>Construct a Map of String to Set of String <code>Map&lt;String, Set&lt;String&gt;&gt;</code>,<br>
+where <code>&quot;other&quot;</code> is mapped to a Set of files' file names that should use the version in the other (given) branch's head commit,<br>
+and <code>&quot;conflict&quot;</code> is mapped to a Set of files' file names that conflict after merging.</li>
+<li>For file names in the Set need to be checked,
+<ol>
+<li>Add to <code>&quot;other&quot;</code>'s value Set<br>
+if the version of such file in the split commit is the same of it in the current commit<br>
+(has the same content or both not exists).</li>
+<li>Add to <code>&quot;conflictt&quot;</code>'s value Set<br>
+if the version in the split commit, the current commit,<br>
+and the other branch's head commit is all different from each other.</li>
+</ol>
+</li>
+</ol>
+<h4 id="perform-checks-for-the-merge-command">Perform checks for the merge command</h4>
+<ul>
+<li>Abort merging if a branch with the given name does not exist.</li>
+<li>Abort merging if there are staged additions or removals present.</li>
+<li>Abort merging if attempting to merge a branch with itself.</li>
+<li>Exit if the split point is the same commit as the given branch's head commit. The merge is complete.</li>
+<li>Fast-forward and exit if the split point is the same commit as the current branch.</li>
+<li>Abort merging if an untracked file in the current commit would be overwritten or deleted by the merge.<br>
+This is checked after which files will be changed is determined.</li>
+<li>Abort merging if there are unstaged changes to file that would be changed by the merge.<br>
+This is checked after which files will be changed is determined.</li>
+</ul>
+<h4 id="modify-the-cwd-for-merging-make-merge-commit">Modify the <code>CWD</code> for merging, make merge Commit</h4>
+<p>The Map recoding necessary modification is disassembled into two <code>Set</code>s<br>
+(one holding file names that should be changed to their version in the given branch's head commit,<br>
+and one holding file names that resulting in conflicts).<br>
+Two helper methods are utilized to carry out the modifications.<br>
+The changes will be staged immediately.</p>
+<p>Making a merge <code>Commit</code> is not so different from making a normal commit,<br>
+despite the new commit will have two parent commit IDs,<br>
+the first is the current commit ID and the second is the ID of the given branch's head commit.<br>
+Lastly, Gitlet will print a message to the console if any conflict is made.</p>
+<h3 id="remote-commands">Remote commands</h3>
+<p>Commands related with remote repository requires reuse of existing code for the local repository.<br>
+To fulfill this demand, static variables (such as <code>CWD</code>, or <code>GITLET_DIR</code>)<br>
+in the <code>Repository</code> class are no longer final and will be assigned each time.<br>
+That is, when executing commands on the local repository, static variables will be assigned normally;<br>
+while executing commands on the remote repository, these static variables will be assigned according to the remote<br>
+working directory, thus reuse the existing code to manipulating the remote repository.</p>
+<h4 id="add-and-remove-a-remote">add and remove a remote</h4>
+<p>This command only involved manipulation to the local repository (creating path reference to the remote repository).</p>
+<h4 id="push-command"><code>push</code> command</h4>
+<ol>
+<li>Get the <code>Commit</code> object of the local repository's head commit<br>
+and the front commit of the remote repository's given branch.<br>
+Create a new branch at the remote repository if such branch does not exist.</li>
+<li>Calculate the commits need to be pushed by contracting the ancestors of the two commits.</li>
+<li>Push the <code>Commit</code>s (and their associating <code>Tree</code> and <code>Blob</code>) to the remote repository.<br>
+Specifically, using the caching and writing back mechanisms developed for the local repository.<br>
+Commit's IDs are added to the remote <code>allCommitsID</code> file upon pushing.</li>
+<li>Reset the remote repository (change it to the given branch and fast-forward that branch).</li>
+</ol>
+<h4 id="fetch-command"><code>fetch</code> command</h4>
+<ol>
+<li>Get the <code>Commit</code> object of the local repository's fetched branch's head commit<br>
+and the head commit of the remote repository's designated branch.</li>
+<li>Calculate the commits need to be fetched by contracting the ancestors of the two commits.</li>
+<li>Fetch the <code>Commit</code>s (and their associating <code>Tree</code> and <code>Blob</code>) to the local repository.<br>
+Specifically, using the caching and writing back mechanisms of the local repository.<br>
+Commit's IDs are added to the local <code>allCommitsID</code> file upon fetching.</li>
+</ol>
+<h4 id="pull-command"><code>pull</code> command</h4>
+<p>This command is executed simply fetch the designated remote branch using the <code>fetch</code> command,<br>
+and then merge the fetched branch into the current branch using the <code>merge</code> command.</p>
+<h2 id="persistence">Persistence</h2>
+<p>The directory structure looks like this:</p>
+<pre><code>CWD                                                      &lt;==== Whatever the current working directory is
+└── .gitlet                                              &lt;==== All persistant data is stored within here
+    ├── HEAD                                             &lt;==== The name of the current branch
+    ├── STAGE                                            &lt;==== A hash pointer to the serialized staging area Tree
+    ├── allCommitsID                                     &lt;==== A serialized Tree that contains all commits' IDs
+    ├── objects                                          &lt;==== The object database (all HashObject lives here)
+    │   ├── d9                                           &lt;==== Saves all HashObject with ID stating with &quot;d9&quot;
+    │   │   ├── 91f6cad12cc1bfb64791e893fa01ac5bf8358e   &lt;==== A saved HashObject, named after its ID without the first two letters
+    │   │   └── ...                                    
+    │   └── ...                                        
+    ├── branches                                         &lt;==== Store all the branch references
+    │   ├── R1                                           &lt;==== Directory of branches fetched from a remote repository
+    │   │   ├── master                                   &lt;==== A branch fetched from a remote, will be displayed as &quot;R1/master&quot;
+    │   │   └── ...
+    │   ├── master                                       &lt;==== The default branch. Contains a hash pointer to a commit
+    │   └── ...
+    └── remotes                                          &lt;==== Store all the remote references
+        ├── R1                                           &lt;==== A remote references in String, e.g. [remote directory]/.gitlet
+        └── ...
+</code></pre>
+<h3 id="commands">Commands</h3>
+<h4 id="init-command"><code>init</code> command</h4>
+<p>The <code>Repository.setUpPersistence()</code> method will set up all persistence. It will:</p>
+<ol>
+<li>Abort if there is already a Gitlet version-control system in the current directory</li>
+<li>Create <code>.gitlet/branches</code> and <code>.gitlet/objects</code> folders</li>
+<li>Create <code>.gitlet/HEAD</code>, <code>.gitlet/STAGE</code>, and <code>.gitlet/allCommitsID</code></li>
+</ol>
+<p>After setting up all persistence, the <code>init</code> command will do its jobs.<br>
+Finally, all changes that should be persistent (including branching, HEAD, new commit, and Tree for that commit)<br>
+will be written to filesystem automatically by the <code>Cache.writeBack</code> method invoked in <code>Main.main(String[] args)</code>.</p>
+<h4 id="add-command"><code>add</code> command</h4>
+<p>This command will modify persistence in the following two cases:</p>
+<ol>
+<li>If the current version of the added file is identical to the version in the latest commit,<br>
+that file will be removed from the staging area if it is already there.<br>
+(as can happen when a file is changed, added, and then changed back to its original version)</li>
+<li>If case 1 isn't happening and the added file is different from the version that is already in the staging area<br>
+(if it exists),<br>
+a new staging area containing the added file is saved to filesystem.</li>
+</ol>
+<h4 id="commit-command"><code>commit</code> command</h4>
+<p>The <code>commit</code> command will modify persistence following the following rules (no pun intended):</p>
+<ol>
+<li>Save a serialized <code>Commit</code> object in the object database</li>
+<li>Overwrite the current branch's file, make it contains the new commit's ID</li>
+<li>Make a new staging area and overwrite the <code>STAGE</code> file</li>
+<li>Record the new commits' ID to <code>.gitlet/allCommitsID</code></li>
+<li><s>Delete the previous staging area if it is not empty, and there is a commit already <em>(subtle bug may exist)</em></s></li>
+</ol>
+<h4 id="rm-command"><code>rm</code> command</h4>
+<p>The <code>rm</code> command will change the current staging area <code>Tree</code><br>
+if the designated file is added (removing from the staging area)<br>
+or exists in the head commit (staging for removal).</p>
+<h4 id="checkout-command"><code>checkout</code> command</h4>
+<p>This command will write the current working directory, but only read persistence.<br>
+An exception is that when checking out to a branch, the staging area will be cleared.</p>
+<h4 id="branch-command"><code>branch</code> command</h4>
+<p>When a branch is created, a <code>branchName</code> - <code>CommitID</code> pair will be written into the <code>cachedBranches</code> data structure.<br>
+Upon exit, the <code>cachedBranches</code> will be written back to the filesystem, i.e. the persistence will be modified<br>
+according to cached information.</p>
+<h4 id="rm-branch-command"><code>rm-branch</code> command</h4>
+<p>When a branch is removed, the corresponding file under the <code>.gitlet/branches</code> directory will be deleted.</p>
+<h4 id="reset-command"><code>reset</code> command</h4>
+<p>This command will write the current working directory and clear the staging area.</p>
+<h4 id="merge-command"><code>merge</code> command</h4>
+<p>If the merging is carried out successfully, this command will change the persistence just like the <code>commit</code> command.</p>
+<h4 id="add-remote-and-rm-remote-command"><code>add-remote</code> and <code>rm-remote</code> command</h4>
+<p>These two commands will create/delete files in <code>.gitlet/remotes/</code> directory.</p>
+<h4 id="push-fetch-and-pull-command"><code>push</code>, <code>fetch</code>, and <code>pull</code> command</h4>
+<p>These two commands will add serialized <code>HashObject</code> to the object database,<br>
+as well as the branch files, the <code>.gitlet/HEAD</code> file, and the <code>.gitlet/allCommitsID</code> file.</p>
+<figure data-type="image" tabindex="2"><img src="https://311zzb.github.io/post-images/gitlet-design-document.png" alt="test-36a-debug" loading="lazy"></figure>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://311zzb.github.io/post/subtype-polymorphism/" class="post-title gt-a-link">
+                    Subtype polymorphism in Java: Overriding vs. Overloading
+                </a>
+            </div>
+        
+
+        
+
+        
+            
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+<script>
+    // md5.min.js
+    !function(n){
+        "use strict";
+        function d(n,t){var r=(65535&n)+(65535&t);return(n>>16)+(t>>16)+(r>>16)<<16|65535&r}
+        function f(n,t,r,e,o,u){return d((c=d(d(t,n),d(e,u)))<<(f=o)|c>>>32-f,r);var c,f}
+        function l(n,t,r,e,o,u,c){return f(t&r|~t&e,n,t,o,u,c)}
+        function v(n,t,r,e,o,u,c){return f(t&e|r&~e,n,t,o,u,c)}
+        function g(n,t,r,e,o,u,c){return f(t^r^e,n,t,o,u,c)}
+        function m(n,t,r,e,o,u,c){return f(r^(t|~e),n,t,o,u,c)}
+        function i(n,t){var r,e,o,u,c;n[t>>5]|=128<<t%32,n[14+(t+64>>>9<<4)]=t;var f=1732584193,i=-271733879,a=-1732584194,h=271733878;for(r=0;r<n.length;r+=16)f=l(e=f,o=i,u=a,c=h,n[r],7,-680876936),h=l(h,f,i,a,n[r+1],12,-389564586),a=l(a,h,f,i,n[r+2],17,606105819),i=l(i,a,h,f,n[r+3],22,-1044525330),f=l(f,i,a,h,n[r+4],7,-176418897),h=l(h,f,i,a,n[r+5],12,1200080426),a=l(a,h,f,i,n[r+6],17,-1473231341),i=l(i,a,h,f,n[r+7],22,-45705983),f=l(f,i,a,h,n[r+8],7,1770035416),h=l(h,f,i,a,n[r+9],12,-1958414417),a=l(a,h,f,i,n[r+10],17,-42063),i=l(i,a,h,f,n[r+11],22,-1990404162),f=l(f,i,a,h,n[r+12],7,1804603682),h=l(h,f,i,a,n[r+13],12,-40341101),a=l(a,h,f,i,n[r+14],17,-1502002290),f=v(f,i=l(i,a,h,f,n[r+15],22,1236535329),a,h,n[r+1],5,-165796510),h=v(h,f,i,a,n[r+6],9,-1069501632),a=v(a,h,f,i,n[r+11],14,643717713),i=v(i,a,h,f,n[r],20,-373897302),f=v(f,i,a,h,n[r+5],5,-701558691),h=v(h,f,i,a,n[r+10],9,38016083),a=v(a,h,f,i,n[r+15],14,-660478335),i=v(i,a,h,f,n[r+4],20,-405537848),f=v(f,i,a,h,n[r+9],5,568446438),h=v(h,f,i,a,n[r+14],9,-1019803690),a=v(a,h,f,i,n[r+3],14,-187363961),i=v(i,a,h,f,n[r+8],20,1163531501),f=v(f,i,a,h,n[r+13],5,-1444681467),h=v(h,f,i,a,n[r+2],9,-51403784),a=v(a,h,f,i,n[r+7],14,1735328473),f=g(f,i=v(i,a,h,f,n[r+12],20,-1926607734),a,h,n[r+5],4,-378558),h=g(h,f,i,a,n[r+8],11,-2022574463),a=g(a,h,f,i,n[r+11],16,1839030562),i=g(i,a,h,f,n[r+14],23,-35309556),f=g(f,i,a,h,n[r+1],4,-1530992060),h=g(h,f,i,a,n[r+4],11,1272893353),a=g(a,h,f,i,n[r+7],16,-155497632),i=g(i,a,h,f,n[r+10],23,-1094730640),f=g(f,i,a,h,n[r+13],4,681279174),h=g(h,f,i,a,n[r],11,-358537222),a=g(a,h,f,i,n[r+3],16,-722521979),i=g(i,a,h,f,n[r+6],23,76029189),f=g(f,i,a,h,n[r+9],4,-640364487),h=g(h,f,i,a,n[r+12],11,-421815835),a=g(a,h,f,i,n[r+15],16,530742520),f=m(f,i=g(i,a,h,f,n[r+2],23,-995338651),a,h,n[r],6,-198630844),h=m(h,f,i,a,n[r+7],10,1126891415),a=m(a,h,f,i,n[r+14],15,-1416354905),i=m(i,a,h,f,n[r+5],21,-57434055),f=m(f,i,a,h,n[r+12],6,1700485571),h=m(h,f,i,a,n[r+3],10,-1894986606),a=m(a,h,f,i,n[r+10],15,-1051523),i=m(i,a,h,f,n[r+1],21,-2054922799),f=m(f,i,a,h,n[r+8],6,1873313359),h=m(h,f,i,a,n[r+15],10,-30611744),a=m(a,h,f,i,n[r+6],15,-1560198380),i=m(i,a,h,f,n[r+13],21,1309151649),f=m(f,i,a,h,n[r+4],6,-145523070),h=m(h,f,i,a,n[r+11],10,-1120210379),a=m(a,h,f,i,n[r+2],15,718787259),i=m(i,a,h,f,n[r+9],21,-343485551),f=d(f,e),i=d(i,o),a=d(a,u),h=d(h,c);return[f,i,a,h]}
+        function a(n){var t,r="",e=32*n.length;for(t=0;t<e;t+=8)r+=String.fromCharCode(n[t>>5]>>>t%32&255);return r}
+        function h(n){var t,r=[];for(r[(n.length>>2)-1]=void 0,t=0;t<r.length;t+=1)r[t]=0;var e=8*n.length;for(t=0;t<e;t+=8)r[t>>5]|=(255&n.charCodeAt(t/8))<<t%32;return r}
+        function e(n){var t,r,e="0123456789abcdef",o="";for(r=0;r<n.length;r+=1)t=n.charCodeAt(r),o+=e.charAt(t>>>4&15)+e.charAt(15&t);return o}
+        function r(n){return unescape(encodeURIComponent(n))}
+        function o(n){return a(i(h(t=r(n)),8*t.length));var t}
+        function u(n,t){return function(n,t){var r,e,o=h(n),u=[],c=[];for(u[15]=c[15]=void 0,16<o.length&&(o=i(o,8*n.length)),r=0;r<16;r+=1)u[r]=909522486^o[r],c[r]=1549556828^o[r];return e=i(u.concat(h(t)),512+8*t.length),a(i(c.concat(e),640))}(r(n),r(t))}
+        function t(n,t,r){return t?r?u(t,n):e(u(t,n)):r?o(n):e(o(n))}
+        "function"==typeof define&&define.amd?define(function(){return t}):"object"==typeof module&&module.exports?module.exports=t:n.md5=t;
+    }(this);
+</script>
+
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '4fc9fd2e3cc0c16e0cf1',
+    clientSecret: 'df8d67adcb3240214315232231a7d90f1adbd094',
+    repo: '311zzb.github.io',
+    owner: '311zzb',
+    admin: ['311zzb'],
+    id: md5(location.pathname),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false       // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+            
+
+            
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first"></div>
+    <div class="social-container">
+        
+            
+                <a href="https://github.com/311zzb" target="_blank">
+                    <i class="fab fa-github gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        
+    </div>
+    <div>
+        Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://311zzb.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+    </div>
+</div>
+</body>
+</html>

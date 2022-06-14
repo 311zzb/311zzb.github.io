@@ -1,0 +1,937 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+<meta name="description" content=""/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+<title>Subtype polymorphism in Java: Overriding vs. Overloading | 311zzb</title>
+
+<link rel="shortcut icon" href="https://311zzb.github.io/favicon.ico?v=1655211738195">
+
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://311zzb.github.io/styles/main.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets/highlight.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dockerfile.min.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/9.15.10/languages/dart.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/moment@2.27.0/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"></script>
+<!-- DEMO JS -->
+<!--<script src="media/scripts/index.js"></script>-->
+
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-216170282-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+        gtag('config', 'UA-216170282-2');
+    </script>
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.css">
+</head>
+<body>
+<div class="main gt-bg-theme-color-first">
+    <nav class="navbar navbar-expand-lg">
+    <div class="navbar-brand">
+        <img class="user-avatar" src="/images/avatar.png" alt="头像">
+        <div class="site-name gt-c-content-color-first">
+            311zzb
+        </div>
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-bars gt-c-content-color-first" style="font-size: 18px"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="navbar-nav mr-auto" style="text-align: center">
+            
+                <div class="nav-item">
+                    
+                        <a href="/" class="menu gt-a-link">
+                            首页
+                        </a>
+                    
+                </div>
+            
+                <div class="nav-item">
+                    
+                        <a href="/archives" class="menu gt-a-link">
+                            归档
+                        </a>
+                    
+                </div>
+            
+                <div class="nav-item">
+                    
+                        <a href="/tags" class="menu gt-a-link">
+                            标签
+                        </a>
+                    
+                </div>
+            
+                <div class="nav-item">
+                    
+                        <a href="/post/about" class="menu gt-a-link">
+                            关于
+                        </a>
+                    
+                </div>
+            
+        </div>
+        <div style="text-align: center">
+            <form id="gridea-search-form" style="position: relative" data-update="1655211738195" action="/search/index.html">
+                <input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="搜索文章" />
+                <i class="fas fa-search gt-c-content-color-first" style="position: absolute; top: 9px; left: 10px;"></i>
+            </form>
+        </div>
+    </div>
+</nav>
+
+    <div class="post-container">
+        <div class="post-detail gt-bg-theme-color-second">
+            <article class="gt-post-content">
+                <h2 class="post-title">
+                    Subtype polymorphism in Java: Overriding vs. Overloading
+                </h2>
+                <div class="post-info">
+                    <time class="post-time gt-c-content-color-first">
+                        · 2022-01-24 ·
+                    </time>
+                    
+                        <a href="https://311zzb.github.io/tag/4yc-Dwauuu/" class="post-tags">
+                            # Java
+                        </a>
+                    
+                        <a href="https://311zzb.github.io/tag/dA54dJIhy0/" class="post-tags">
+                            # Develop
+                        </a>
+                    
+                </div>
+                <div class="post-content">
+                    <p>Subtype polymorphism (providing a single interface to entities of different types) and dynamic type selection (DMS) might be one of the most obscure part for Java beginners like me. Here I am trying to write an article on this topic gathering my solutions and approaches to problems in such topic.</p>
+<!-- more -->
+<p><em>Disclaimer: Most materials and examples are collected from University of California Berkeley CS61b Spring 2021. Copyright belongs to the original author.</em></p>
+<h1 id="what-are-overriding-and-overloading">What are overriding and overloading</h1>
+<ul>
+<li>Overriding: if a “subclass” has a method with <strong>the exact same signatures</strong> as in the “superclass”, we say <strong>the subclass overrides the method</strong>.</li>
+<li>Overloading: methods with <strong>the same name</strong> but <strong>different signatures</strong> are <strong>overloaded</strong>.</li>
+</ul>
+<p>The signature of a method is composed of a name and the number, type, and order of its parameters. However, return types, thrown exceptions, and names of parameters are not included in signature.</p>
+<p>A subtle point is that there is no “one method overloads another method”. Methods in an overloading situation are like siblings instead of parent and children for an overriding scenario.</p>
+<pre><code class="language-java">/* abs is overloaded */
+public class Math {
+   public int    abs(int a) { }
+   public double abs(double a) { }
+</code></pre>
+<pre><code class="language-java">public interface Animal {
+   public void makeNoise();
+}
+/* makeNoise is overloaded */
+public class Dog implements Animal {
+   public void makeNoise(Dog x) {
+			System.out.print(&quot;Woof&quot;);
+	 }
+}
+/* Pig overrides makeNoise() */
+public class Pig implements Animal {
+	@Override
+  public void makeNoise() {
+    System.out.print(“oink”);
+   }
+}
+</code></pre>
+<h1 id="static-and-dynamic-type">Static and dynamic type</h1>
+<p>An variable’s static type is specified when the variable is declared, and is determined at compile time. On the other hand, dynamic type is specified when the variable is instantiated, and is determined at runtime. The static type of an variable can never change along the course of running the program, but its dynamic type could be modified by assigning.</p>
+<pre><code class="language-java">Thing a;
+a = new Fox();
+Animal b = (Animal) a;
+Fox c = (Fox) b;
+a = new Squid();
+</code></pre>
+<p>The static and dynamic types of variables after running the above code would be:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Static type</th>
+<th>Dynamic type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a</td>
+<td>Thing</td>
+<td>Squid</td>
+</tr>
+<tr>
+<td>b</td>
+<td>Animal</td>
+<td>Fox</td>
+</tr>
+<tr>
+<td>c</td>
+<td>Fox</td>
+<td>Fox</td>
+</tr>
+</tbody>
+</table>
+<p>As a reminder, what equal assignment does in Java is just “copying bits”. And any reference type objects is stored in the variable as a pointer to its actual address. This is to say, when assigning primitive type objects, such as Integer, Java copy the actual “thing”. On the other hand, Java only copy the address of the referential object to what is on the left side of the equal sign.</p>
+<p>Therefore, variable <code>b</code> is holding the address of <code>a</code> after we assign <code>a</code> to <code>b</code> on line 3. This is originally invalid consider (static type of) <code>a</code> is a <code>Thing</code> but <code>b</code> is an <code>Animal</code>, but the casting <code>(Animal)</code> is making the compiler considering <code>a</code> as an <code>Animal</code> type, thus avoiding a compile error. At runtime, the casting is smoothly carried out given the fact that <code>Fox</code> is an <code>Animal</code>, and the variable <code>b</code> is now holding the address of the same <code>Fox</code> object as <code>a</code>.</p>
+<h1 id="dynamic-method-selection">Dynamic method selection</h1>
+<p>The rule of DMS is straight forward: if we have a static type <code>X</code>, and a dynamic type <code>Y</code>, then if <code>Y</code> overrides the method from <code>X</code>, then on runtime, we use the method in <code>Y</code> instead.</p>
+<p>We can also think about DMS as a 2 step process, where step 1 happens at compile time, and step 2 happens at runtime.</p>
+<ol>
+<li>At compile time: We determine the <strong>signature S</strong> of the method to be called. S is decided using <strong>ONLY static types</strong>.</li>
+<li>At runtime: The dynamic type of the <strong>invoking object</strong> uses its method with this exact signature S. By “invoking object”, we mean the object whose method is invoked.</li>
+</ol>
+<p>Let’s try it out.</p>
+<pre><code class="language-java">public interface Animal {
+  default void greet(Animal a) {
+    print(&quot;hello animal&quot;); }
+  default void sniff(Animal a) {
+    print(&quot;sniff animal&quot;); }
+  default void praise(Animal a) {
+    print(&quot;u r cool animal&quot;); }
+}
+
+public class Dog implements Animal {
+  @Override
+  void sniff(Animal a) {
+    print(&quot;dog sniff animal&quot;); }
+  void praise(Dog a) {
+    print(&quot;u r cool dog&quot;); }
+	public static void main(String[] args) {
+		Animal a = new Dog();
+		Dog d = new Dog();
+		a.greet(d);
+		a.sniff(d);
+		d.praise(d);
+		a.praise(d);
+	}
+}
+</code></pre>
+<p>The first step to figure out what is going to be displayed is to write down the types.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Static type</th>
+<th>Dynamic type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a</td>
+<td>Animal</td>
+<td>Dog</td>
+</tr>
+<tr>
+<td>d</td>
+<td>Dog</td>
+<td>Dog</td>
+</tr>
+</tbody>
+</table>
+<p>After that, let's write down the signature of each call at compile time based on the invoking objects’ static types.</p>
+<pre><code class="language-java">a.greet(d);  // greet(Animal a)
+a.sniff(d);  // sniff(Animal a)
+d.praise(d); // praise(Dog a)
+a.praise(d); // praise(Animal a)
+</code></pre>
+<p>Lasty, we call the invoking objects’ dynamic type’s method with the same signature we write down previously.</p>
+<pre><code class="language-java">a.greet(d);  // greet(Animal a)  -&gt; “hello animal”
+a.sniff(d);  // sniff(Animal a)  -&gt; “dog sniff animal”
+d.praise(d); // praise(Dog a)    -&gt; “u r cool dog”
+a.praise(d); // praise(Animal a) -&gt; “u r cool animal”
+</code></pre>
+<p>The tricky part here is that <code>praise(Animal a)</code> in <code>Animal</code> interface and <code>praise(Dog a)</code> in <code>Dog</code> class are overloading, instead of the latter one overrides the other one. In such case, no DMS is happening.</p>
+<p>Note that in this example, the type of parameter is trivial, as <code>d</code> has the same static type and dynamic type <code>Dog</code>, and <code>Dog</code> is a “Subclass” of <code>Animal</code> so it can be feed into a <code>Animal</code> type variable.</p>
+<h1 id="just-for-fun">Just for fun</h1>
+<ol>
+<li>
+<p>Bird and Falcon</p>
+<p>What gets printed after running the following code?</p>
+<pre><code class="language-java">
+public class Bird {
+	public void gulgate(Bird b) {
+    	System.out.println(&quot;BiGulBi&quot;); 
+	}
+}
+public class Falcon extends Bird {
+	public void gulgate(Falcon f) {
+    	System.out.println(&quot;FaGulFa&quot;);
+	}
+}
+</code></pre>
+<pre><code class="language-java">
+Bird bird = new Falcon();
+Falcon falcon = (Falcon) bird;
+bird.gulgate(falcon);
+falcon.gulgate(falcon);
+</code></pre>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Static type</th>
+<th>Dynamic type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bird</td>
+<td>Bird</td>
+<td>Falcon</td>
+</tr>
+<tr>
+<td>falcon</td>
+<td>Falcon</td>
+<td>Falcon</td>
+</tr>
+</tbody>
+</table>
+<p>Note that casting won’t change an object’s type, all it do is making the compiler believe the type of whatever after the casting is as stated inside the brackets.</p>
+<pre><code class="language-java">
+Bird bird = new Falcon();
+Falcon falcon = (Falcon) bird;
+bird.gulgate(falcon);          // gulgate(Bird b)   -&gt; &quot;BiGulBi&quot;
+falcon.gulgate(falcon);        // gulgate(Falcon f) -&gt; &quot;FaGulFa&quot;
+</code></pre>
+<p>No DMS happens in this example.</p>
+</li>
+<li>
+<p>Dog and ShowDog</p>
+<p>For each assignment, decide if it causes a compile error. For each call to bark, decide what is printed or Java throw a syntax error.</p>
+<pre><code class="language-java">public class Dog {
+	public String name;
+	public int height;
+	public Dog(String name, int height) {
+		name = name;
+		height = height;
+	}
+	public static void bark() {
+		System.out.println(&quot;Woof!&quot;);
+	}
+}
+
+public class ShowDog extends Dog {
+	@Override
+	public static void bark() {
+		System.out.println(&quot;Yo! What's up!&quot;);
+	}
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Static type</th>
+<th>Dynamic type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>o2</td>
+<td>Object</td>
+<td>ShowDog</td>
+</tr>
+<tr>
+<td>sdx</td>
+<td>ShowDog</td>
+<td>ShowDog</td>
+</tr>
+<tr>
+<td>dx</td>
+<td>Dog</td>
+<td>ShowDog</td>
+</tr>
+<tr>
+<td>((Dog) o2)</td>
+<td>Dog</td>
+<td>ShowDog</td>
+</tr>
+<tr>
+<td>o3</td>
+<td>Object</td>
+<td>ShowDog</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-java">
+Object o2 = new ShowDog(&quot;Mortimer&quot;, 25); 
+ShowDog sdx = ((ShowDog) o2);            
+sdx.bark();                              // bark() -&gt; &quot;Yo! What's up!&quot;
+Dog dx = ((Dog) o2);                     
+dx.bark();                               // bark() -&gt; &quot;Yo! What's up!&quot;
+((Dog) o2).bark();                       // bark() -&gt; &quot;Yo! What's up!&quot;
+Object o3 = (Dog) o2;                    
+o3.bark();                               // compile error
+</code></pre>
+<p>In fact, every time when <code>bark()</code> is invoked, the overriding method in the <code>ShowDog</code> class is used. By the way, <code>o3.bark()</code> won’t compile because the compiler think there is no <code>bark()</code> method for an <code>Object</code> (<code>o3</code>’s static type), despite both you and I know <code>o3</code> is actually a <code>ShowDog</code> with a <code>bark()</code> method. That is how the compiler works. One way to debug this is to cast <code>o3</code> to types that have <code>bark()</code> method. For example, we can write <code>((ShowDog) o3).bark()</code>.</p>
+<h1 id="even-more-fun">Even more fun</h1>
+<ol>
+<li>
+<p>Raining cats and dogs</p>
+<p>Below, four classes are defined. What would Java do after executing the main method in the <code>TestAnimal</code> class? Next to each blank, if something is printed write it down. If there is an error, write whether it is a runtime error or compile time error, and then proceed through the rest of the code as if the erroneous line were not there.</p>
+<pre><code class="language-java">
+public class Animal {
+	public String name, noise;
+	public int age;
+
+	public Animal(String name, int age) {
+		this.name = name;
+		this.age = age;
+		this.noise = &quot;Huh?&quot;;
+	}
+
+	public void greet() {System.out.println(&quot;Animal &quot; + name + &quot; says: &quot; + this.noise);}
+	
+	public void play() {System.out.println(&quot;Woo it is so much fun being an animal!&quot;)}
+}
+
+public class Cat extends Animal {
+	public Cat(String name, int age) {
+		super(name, age);
+		this.noise = &quot;Meow!&quot;;
+	}
+
+	@Override
+	public void greet() {System.out.println(&quot;Cat &quot; + name + &quot; says: &quot; + this.noise);}
+
+	public void play(String expr) {System.out.println(&quot;Woo it is so much fun being a cat!&quot; + expr)}
+}
+
+public class Dog extends Animal {
+	public Dog(String name, int age) {
+		super(name, age);
+		noise = &quot;Woof!&quot;;
+	}
+
+	@Override
+	public void greet() {System.out.println(&quot;Dog &quot; + name + &quot; says: &quot; + this.noise);}
+
+	public void play(int happiness) {
+		if (happiness &gt; 10) {
+			System.out.println(&quot;Woo it is so much fun being a dog!&quot;)
+		}
+	}
+}
+
+public class TestAnimal {
+	public static void main(String[] args) {
+		Animal a = new Animal(&quot;Pluto&quot;, 10);
+		Cat c = new Cat(&quot;Garfield&quot;, 6);
+		Dog d = new Dog(&quot;Fido&quot;, 4);
+		a.greet();             // ______________________
+		c.greet();             // ______________________
+		d.greet();             // ______________________
+		c.play();              // ______________________
+		c.play(&quot;:)&quot;)           // ______________________
+		a = c;
+		((Cat) a).greet();     // ______________________
+		((Cat) a).play(&quot;:D&quot;);  // ______________________
+		a.play(14);            // ______________________
+		((Dog) a).play(12);    // ______________________
+		a.greet();             // ______________________
+		c = a;                 // ______________________
+	}
+}
+</code></pre>
+<p>After executing the first 3 lines in <code>TestAnimal.main</code>, variables has static types and dynamic types as below:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Static type</th>
+<th>Dynamic type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a</td>
+<td>Animal</td>
+<td>Animal</td>
+</tr>
+<tr>
+<td>c</td>
+<td>Cat</td>
+<td>Cat</td>
+</tr>
+<tr>
+<td>d</td>
+<td>Dog</td>
+<td>Dog</td>
+</tr>
+</tbody>
+</table>
+<p>After all execution, their types are (assuming the last line is fixed):</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Static type</th>
+<th>Dynamic type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a</td>
+<td>Animal</td>
+<td>Cat</td>
+</tr>
+<tr>
+<td>c</td>
+<td>Cat</td>
+<td>Cat</td>
+</tr>
+<tr>
+<td>d</td>
+<td>Dog</td>
+<td>Dog</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-java">
+a.greet();             // greet() -&gt; &quot;Animal Pluto says: Huh?&quot;
+c.greet();             // greet() -&gt; &quot;Cat Garfield says: Meow!&quot;
+d.greet();             // greet() -&gt; &quot;Dog Fido says: Woof!&quot;
+c.play();              // play() -&gt; &quot;Woo it is so much fun being an animal!&quot;
+c.play(&quot;:)&quot;)           // play(String expr) -&gt; &quot;Woo it is so much fun being a cat!:)&quot;
+a = c;
+((Cat) a).greet();     // greet() -&gt; &quot;Cat Garfield says: Meow!&quot;
+((Cat) a).play(&quot;:D&quot;);  // play(String expr) -&gt; &quot;Woo it is so much fun being a cat!:D&quot;
+a.play(14);            // Compile Error
+((Dog) a).play(12);    // play(int happiness) -&gt; Runtime Error
+a.greet();             // greet() -&gt; &quot;Cat Garfield says: Meow!&quot;
+c = a;                 // Compile Error
+</code></pre>
+<p>One possible fix for the last line <code>c = a;</code> is to perform a cast <code>c = (Cat) a</code>. This line triggers a compile error due to the fact that <code>Animal</code> is a “Superclass” of <code>Cat</code>, and assigning an object from the “Superclass” to its “Subclass” won’t compile, even if we all know that <code>a</code> is actually a <code>Cat</code>, rather than other <code>Animal</code> that can’t fit in a <code>Cat</code> variable. By casting, we tell the compiler just trust that <code>a</code> is a <code>Cat</code>, and everything goes fine.</p>
+</li>
+<li>
+<p>An exercise in inheritance misery</p>
+<p>Cross out any lines that result in compiler errors, as well as subsequent lines that would fail because of the compiler error. Put an X through runtime errors (if any). Don’t just limit your search to main, there could be errors in classes <code>A</code>,<code>B</code>,<code>C</code>. What does <code>D.main</code> output after removing these lines?</p>
+<pre><code class="language-java">
+public class A {
+	public int x = 5;
+	public void m1() { System.out.println(&quot;Am1-&gt; &quot; + x); }
+	public void m2() { System.out.println(&quot;Am2-&gt; &quot; + this.x); }
+	public void update() { x = 99; }
+}
+public class B extends A {
+	public void m2() { System.out.println(&quot;Bm2-&gt; &quot; + x); }
+	public void m2(int y) { System.out.println(&quot;Bm2y-&gt; &quot; + y); }
+	public void m3() { System.out.println(&quot;Bm3-&gt; &quot; + &quot;called&quot;); }
+}
+public class C extends B {
+	public int y = x + 1;
+	public void m2() { System.out.println(&quot;Cm2-&gt; &quot; + super.x); }
+	public void m4() { System.out.println(&quot;Cm4-&gt; &quot; + super.super.x); } // super.super is not allowed in java
+	public void m5() { System.out.println(&quot;Cm5-&gt; &quot; + y); }
+}
+public class D {
+	public static void main (String[] args) {
+		B a0 = new A();
+		a0.m1();
+		a0.m2(16);
+		A b0 = new B();
+		System.out.println(b0.x);
+		b0.m1();
+		b0.m2();
+		b0.m2(61);
+		B b1 = new B();
+		b1.m2(61);
+		b1.m3();
+		A c0 = new C();
+		c0.m2();
+		C c1 = (A) new C();
+		A a1 = (A) c0;
+		C c2 = (C) a1;
+		c2.m3();
+		c2.m4();
+		c2.m5();
+		((C) c0).m3();
+		(C) c0.m2();
+		b0.update();
+		b0.m1();
+	}
+}
+</code></pre>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Static type</th>
+<th>Dynamic type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>b0</td>
+<td>A</td>
+<td>B</td>
+</tr>
+<tr>
+<td>b1</td>
+<td>B</td>
+<td>B</td>
+</tr>
+<tr>
+<td>c0</td>
+<td>A</td>
+<td>C</td>
+</tr>
+<tr>
+<td>a1</td>
+<td>A</td>
+<td>C</td>
+</tr>
+<tr>
+<td>c2</td>
+<td>C</td>
+<td>C</td>
+</tr>
+<tr>
+<td>((C) c0)</td>
+<td>C</td>
+<td>C</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-java">
+// B a0 = new A();          Compile Error, can't assign an A object to a B variable
+// a0.m1();                  
+// a0.m2(16);                
+A b0 = new B();           
+System.out.println(b0.x); // 5
+b0.m1();                  // m1() -&gt; &quot;Am1-&gt; 5&quot;
+b0.m2();                  // m2() -&gt; &quot;Bm2-&gt; 5&quot;
+// b0.m2(61);                Compile Error, m2(int y) is not defined in class A
+B b1 = new B();           
+b1.m2(61);                // m2(int y) -&gt; &quot;Bm2y-&gt; 61&quot;
+b1.m3();                  // m3() -&gt; &quot;Bm3-&gt; called&quot;
+A c0 = new C();           
+c0.m2();                  // m2() -&gt; &quot;Cm2-&gt; 5&quot;
+// C c1 = (A) new C();       Compile Error, can't assign an A object to a C variable
+A a1 = (A) c0;            
+C c2 = (C) a1;            
+c2.m3();                  // m3() -&gt; &quot;Bm3-&gt; called&quot;
+// c2.m4();                  C.m4() is invalid
+c2.m5();                  // m5() -&gt; &quot;Cm5-&gt; 6&quot;
+((C) c0).m3();            // m3() -&gt; &quot;Bm3-&gt; called&quot;
+// (C) c0.m2();              Compile Error, can't cast a void to C class
+b0.update();              // update() -&gt; 
+b0.m1();                  // m1() -&gt; &quot;Am1-&gt; 99&quot;
+</code></pre>
+</li>
+</ol>
+<h1 id="ecstasy">Ecstasy</h1>
+<ol>
+<li>
+<p>Athletes</p>
+<p>Suppose we have the <code>Person</code>, <code>Athlete</code>, and <code>SoccerPlayer</code> classes defined below.</p>
+<pre><code class="language-java">
+class Person {
+	void speakTo(Person other) { System.out.println(&quot;kudos&quot;); }
+	void watch(SoccerPlayer other) { System.out.println(&quot;wow&quot;); }
+}
+
+class Athlete extends Person {
+	void speakTo(Athlete other) { System.out.println(&quot;take notes&quot;); }
+	void watch(Athlete other) { System.out.println(&quot;game on&quot;); }
+}
+
+class SoccerPlayer extends Athlete {
+	void speakTo(Athlete other) { System.out.println(&quot;respect&quot;); }
+	void speakTo(Person other) { System.out.println(&quot;hmph&quot;); }
+}
+</code></pre>
+<p>For each line below, write what, if anything, is printed after its execution.<br>
+Write CE if there is a compiler error and RE if there is a runtime error. If a<br>
+line errors, continue executing the rest of the lines.</p>
+<pre><code class="language-java">
+Person itai = new Person();                  //
+SoccerPlayer shivani = new Person();         //
+Athlete sohum = new SoccerPlayer();          //
+Person jack = new Athlete();                 //
+Athlete anjali = new Athlete();              //
+SoccerPlayer chirasree = new SoccerPlayer(); //
+itai.watch(chirasree);                       //
+jack.watch(sohum);                           //
+itai.speakTo(sohum);                         //
+jack.speakTo(anjali);                        //
+anjali.speakTo(chirasree);                   //
+sohum.speakTo(itai);                         //
+chirasree.speakTo((SoccerPlayer) sohum);     //
+sohum.watch(itai);                           //
+sohum.watch((Athlete) itai);                 //
+((Athlete) jack).speakTo(anjali);            //
+((SoccerPlayer) jack).speakTo(chirasree);    //
+((Person) chirasree).speakTo(itai);          //
+</code></pre>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Static type</th>
+<th>Dynamic type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>itai</td>
+<td>Person</td>
+<td>Person</td>
+</tr>
+<tr>
+<td>sohum</td>
+<td>Athlete</td>
+<td>SoccerPlayer</td>
+</tr>
+<tr>
+<td>jack</td>
+<td>Person</td>
+<td>Athlete</td>
+</tr>
+<tr>
+<td>anjali</td>
+<td>Athlete</td>
+<td>Athlete</td>
+</tr>
+<tr>
+<td>chirasree</td>
+<td>SoccerPlayer</td>
+<td>SoccerPlayer</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-java">
+Person itai = new Person();                  //
+SoccerPlayer shivani = new Person();         // CE
+Athlete sohum = new SoccerPlayer();          //
+Person jack = new Athlete();                 //
+Athlete anjali = new Athlete();              //
+SoccerPlayer chirasree = new SoccerPlayer(); //
+itai.watch(chirasree);                       // watch(SoccerPlayer other) -&gt; &quot;wow&quot;
+jack.watch(sohum);                           // CE
+itai.speakTo(sohum);                         // speakTo(Person other) -&gt; &quot;kudos&quot;
+jack.speakTo(anjali);                        // speakTo(Person other) -&gt; &quot;kudos&quot;
+anjali.speakTo(chirasree);                   // speakTo(Athlete other) -&gt; &quot;take notes&quot;
+sohum.speakTo(itai);                         // speakTo(Person other) -&gt; &quot;hmph&quot;
+chirasree.speakTo((SoccerPlayer) sohum);     // speakTo(Athlete other) -&gt; &quot;respect&quot;
+sohum.watch(itai);                           // CE
+sohum.watch((Athlete) itai);                 // RE
+((Athlete) jack).speakTo(anjali);            // speakTo(Athlete other) -&gt; &quot;take notes&quot;
+((SoccerPlayer) jack).speakTo(chirasree);    // RE
+((Person) chirasree).speakTo(itai);          // speakTo(Person other) -&gt; &quot;hmph&quot;
+</code></pre>
+<p>Note that, when a method is invoked, the number of actual arguments and the <strong>compile-time types of the arguments</strong> are used, at compile time, to determine the signature of the method that will be invoked.</p>
+</li>
+<li>
+<p>Challenge: a puzzle</p>
+<p>Consider the partially filled classes for A and B as defined below:</p>
+<pre><code class="language-java">
+public class A {
+	public static void main(String[] args) {
+		___ y = new ___();
+		___ z = new ___();
+	}
+	int fish(A other) {
+		return 1;
+	}
+	int fish(B other) {
+		return 2;
+	}
+}
+
+class B extends A {
+	@Override
+	int fish(B other) {
+		return 3;
+	}
+}
+</code></pre>
+<p>Note that the only missing pieces of the classes above are static/dynamic types!<br>
+Fill in the four blanks with the appropriate static/dynamic type — A or B — such<br>
+that the following are true:</p>
+<ol>
+<li><code>y.fish(z)</code> equals <code>z.fish(z)</code></li>
+<li><code>z.fish(y)</code> equals <code>y.fish(y)</code></li>
+<li><code>z.fish(z)</code> does not equal <code>y.fish(y)</code></li>
+</ol>
+<p>To approach this puzzle, we can firstly enumerate all possible combinations of types <code>y</code> and <code>z</code>, in terms of the value returned when calling the <code>fish</code> method.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Static A</th>
+<th>Static B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Static A Dynamic B</td>
+<td>1</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Static A Dynamic B</td>
+<td>1</td>
+<td>2</td>
+</tr>
+<tr>
+<td>Static B Dynamic B</td>
+<td>1</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<p>Where the head column referring to the invoking object types, and the head row referring to the parameter static type. Because static type <code>B</code> dynamic type <code>A</code> will cause a compile error, so there are only three rows. Further, as signature of method to be invoked considers parameter’s static type rather than both static and dynamic type, there are only two columns.</p>
+<p>Given the three statements, z and y should have types shown as follow:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Static</th>
+<th>Dynamic</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>y</td>
+<td>A</td>
+<td>B</td>
+</tr>
+<tr>
+<td>z</td>
+<td>B</td>
+<td>B</td>
+</tr>
+</tbody>
+</table>
+<p>Therefore, the answer for this puzzle should be:</p>
+<pre><code class="language-java">
+public static void main(String[] args) {
+	A y = new B();
+	B z = new B();
+}
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>
+
+                </div>
+            </article>
+        </div>
+
+        
+            <div class="next-post">
+                <div class="next gt-c-content-color-first">下一篇</div>
+                <a href="https://311zzb.github.io/post/personal-finance/" class="post-title gt-a-link">
+                    Personal Finance
+                </a>
+            </div>
+        
+
+        
+
+        
+            
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk/dist/gitalk.min.js"></script>
+<script>
+    // md5.min.js
+    !function(n){
+        "use strict";
+        function d(n,t){var r=(65535&n)+(65535&t);return(n>>16)+(t>>16)+(r>>16)<<16|65535&r}
+        function f(n,t,r,e,o,u){return d((c=d(d(t,n),d(e,u)))<<(f=o)|c>>>32-f,r);var c,f}
+        function l(n,t,r,e,o,u,c){return f(t&r|~t&e,n,t,o,u,c)}
+        function v(n,t,r,e,o,u,c){return f(t&e|r&~e,n,t,o,u,c)}
+        function g(n,t,r,e,o,u,c){return f(t^r^e,n,t,o,u,c)}
+        function m(n,t,r,e,o,u,c){return f(r^(t|~e),n,t,o,u,c)}
+        function i(n,t){var r,e,o,u,c;n[t>>5]|=128<<t%32,n[14+(t+64>>>9<<4)]=t;var f=1732584193,i=-271733879,a=-1732584194,h=271733878;for(r=0;r<n.length;r+=16)f=l(e=f,o=i,u=a,c=h,n[r],7,-680876936),h=l(h,f,i,a,n[r+1],12,-389564586),a=l(a,h,f,i,n[r+2],17,606105819),i=l(i,a,h,f,n[r+3],22,-1044525330),f=l(f,i,a,h,n[r+4],7,-176418897),h=l(h,f,i,a,n[r+5],12,1200080426),a=l(a,h,f,i,n[r+6],17,-1473231341),i=l(i,a,h,f,n[r+7],22,-45705983),f=l(f,i,a,h,n[r+8],7,1770035416),h=l(h,f,i,a,n[r+9],12,-1958414417),a=l(a,h,f,i,n[r+10],17,-42063),i=l(i,a,h,f,n[r+11],22,-1990404162),f=l(f,i,a,h,n[r+12],7,1804603682),h=l(h,f,i,a,n[r+13],12,-40341101),a=l(a,h,f,i,n[r+14],17,-1502002290),f=v(f,i=l(i,a,h,f,n[r+15],22,1236535329),a,h,n[r+1],5,-165796510),h=v(h,f,i,a,n[r+6],9,-1069501632),a=v(a,h,f,i,n[r+11],14,643717713),i=v(i,a,h,f,n[r],20,-373897302),f=v(f,i,a,h,n[r+5],5,-701558691),h=v(h,f,i,a,n[r+10],9,38016083),a=v(a,h,f,i,n[r+15],14,-660478335),i=v(i,a,h,f,n[r+4],20,-405537848),f=v(f,i,a,h,n[r+9],5,568446438),h=v(h,f,i,a,n[r+14],9,-1019803690),a=v(a,h,f,i,n[r+3],14,-187363961),i=v(i,a,h,f,n[r+8],20,1163531501),f=v(f,i,a,h,n[r+13],5,-1444681467),h=v(h,f,i,a,n[r+2],9,-51403784),a=v(a,h,f,i,n[r+7],14,1735328473),f=g(f,i=v(i,a,h,f,n[r+12],20,-1926607734),a,h,n[r+5],4,-378558),h=g(h,f,i,a,n[r+8],11,-2022574463),a=g(a,h,f,i,n[r+11],16,1839030562),i=g(i,a,h,f,n[r+14],23,-35309556),f=g(f,i,a,h,n[r+1],4,-1530992060),h=g(h,f,i,a,n[r+4],11,1272893353),a=g(a,h,f,i,n[r+7],16,-155497632),i=g(i,a,h,f,n[r+10],23,-1094730640),f=g(f,i,a,h,n[r+13],4,681279174),h=g(h,f,i,a,n[r],11,-358537222),a=g(a,h,f,i,n[r+3],16,-722521979),i=g(i,a,h,f,n[r+6],23,76029189),f=g(f,i,a,h,n[r+9],4,-640364487),h=g(h,f,i,a,n[r+12],11,-421815835),a=g(a,h,f,i,n[r+15],16,530742520),f=m(f,i=g(i,a,h,f,n[r+2],23,-995338651),a,h,n[r],6,-198630844),h=m(h,f,i,a,n[r+7],10,1126891415),a=m(a,h,f,i,n[r+14],15,-1416354905),i=m(i,a,h,f,n[r+5],21,-57434055),f=m(f,i,a,h,n[r+12],6,1700485571),h=m(h,f,i,a,n[r+3],10,-1894986606),a=m(a,h,f,i,n[r+10],15,-1051523),i=m(i,a,h,f,n[r+1],21,-2054922799),f=m(f,i,a,h,n[r+8],6,1873313359),h=m(h,f,i,a,n[r+15],10,-30611744),a=m(a,h,f,i,n[r+6],15,-1560198380),i=m(i,a,h,f,n[r+13],21,1309151649),f=m(f,i,a,h,n[r+4],6,-145523070),h=m(h,f,i,a,n[r+11],10,-1120210379),a=m(a,h,f,i,n[r+2],15,718787259),i=m(i,a,h,f,n[r+9],21,-343485551),f=d(f,e),i=d(i,o),a=d(a,u),h=d(h,c);return[f,i,a,h]}
+        function a(n){var t,r="",e=32*n.length;for(t=0;t<e;t+=8)r+=String.fromCharCode(n[t>>5]>>>t%32&255);return r}
+        function h(n){var t,r=[];for(r[(n.length>>2)-1]=void 0,t=0;t<r.length;t+=1)r[t]=0;var e=8*n.length;for(t=0;t<e;t+=8)r[t>>5]|=(255&n.charCodeAt(t/8))<<t%32;return r}
+        function e(n){var t,r,e="0123456789abcdef",o="";for(r=0;r<n.length;r+=1)t=n.charCodeAt(r),o+=e.charAt(t>>>4&15)+e.charAt(15&t);return o}
+        function r(n){return unescape(encodeURIComponent(n))}
+        function o(n){return a(i(h(t=r(n)),8*t.length));var t}
+        function u(n,t){return function(n,t){var r,e,o=h(n),u=[],c=[];for(u[15]=c[15]=void 0,16<o.length&&(o=i(o,8*n.length)),r=0;r<16;r+=1)u[r]=909522486^o[r],c[r]=1549556828^o[r];return e=i(u.concat(h(t)),512+8*t.length),a(i(c.concat(e),640))}(r(n),r(t))}
+        function t(n,t,r){return t?r?u(t,n):e(u(t,n)):r?o(n):e(o(n))}
+        "function"==typeof define&&define.amd?define(function(){return t}):"object"==typeof module&&module.exports?module.exports=t:n.md5=t;
+    }(this);
+</script>
+
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '4fc9fd2e3cc0c16e0cf1',
+    clientSecret: 'df8d67adcb3240214315232231a7d90f1adbd094',
+    repo: '311zzb.github.io',
+    owner: '311zzb',
+    admin: ['311zzb'],
+    id: md5(location.pathname),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false       // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+            
+
+            
+        
+
+        
+
+        <div class="site-footer gt-c-content-color-first">
+    <div class="slogan gt-c-content-color-first"></div>
+    <div class="social-container">
+        
+            
+                <a href="https://github.com/311zzb" target="_blank">
+                    <i class="fab fa-github gt-c-content-color-first"></i>
+                </a>
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+            
+        
+    </div>
+    <div class="footer-info">
+        
+    </div>
+    <div>
+        Powered by <a
+                href="https://github.com/getgridea/gridea" target="_blank">Gridea | <a href="https://311zzb.github.io/atom.xml" target="_blank">RSS</a></a>
+    </div>
+</div>
+
+<script>
+  hljs.initHighlightingOnLoad()
+</script>
+
+    </div>
+</div>
+</body>
+</html>
